@@ -45,4 +45,36 @@ jQuery(document).ready(function($) {
         
         console.log('Selected language:', selectedLang);
     });
+
+    // Mega Panel functionality
+    let megaPanelTimeout;
+    
+    $('.category-item').hover(
+        function() {
+            const category = $(this).data('category');
+            clearTimeout(megaPanelTimeout);
+            
+            // Show mega panel
+            $('.mega-panel').addClass('active');
+            // Show corresponding section
+            $('.mega-panel-section').removeClass('active');
+            $(`.mega-panel-section[data-category="${category}"]`).addClass('active');
+        },
+        function() {
+            megaPanelTimeout = setTimeout(function() {
+                $('.mega-panel').removeClass('active');
+            }, 200);
+        }
+    );
+
+    $('.mega-panel').hover(
+        function() {
+            clearTimeout(megaPanelTimeout);
+        },
+        function() {
+            megaPanelTimeout = setTimeout(function() {
+                $('.mega-panel').removeClass('active');
+            }, 200);
+        }
+    );
 }); 

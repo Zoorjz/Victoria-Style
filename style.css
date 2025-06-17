@@ -178,4 +178,131 @@ body {
         padding: 0.75rem 1rem;
         text-align: center;
     }
+}
+
+/* Homepage Layout */
+.site-main {
+    position: relative;
+}
+
+/* Category Sidebar */
+.category-sidebar {
+    background-color: var(--secondary-color);
+    min-height: calc(100vh - 200px);
+    padding: 2rem 0;
+    border-right: 1px solid rgba(0,0,0,0.1);
+    width: 240px;
+}
+
+.category-sidebar .list-group-item {
+    border: none;
+    padding: 1rem 1.5rem;
+    color: var(--text-color);
+    transition: all 0.3s ease;
+    background: transparent;
+}
+
+.category-sidebar .list-group-item:hover {
+    background-color: rgba(212, 175, 55, 0.1);
+    color: var(--accent-color);
+    padding-left: 2rem;
+}
+
+.category-sidebar .list-group-item i {
+    color: var(--accent-color);
+}
+
+/* Carousel */
+.carousel {
+    margin-bottom: 2rem;
+}
+
+.carousel-item img {
+    height: 500px;
+    object-fit: cover;
+}
+
+.carousel-control-prev,
+.carousel-control-next {
+    width: 5%;
+    opacity: 0.8;
+}
+
+.carousel-indicators {
+    margin-bottom: 1rem;
+}
+
+.carousel-indicators button {
+    width: 12px;
+    height: 12px;
+    border-radius: 50%;
+    margin: 0 5px;
+    background-color: var(--accent-color);
+}
+
+/* Mega Panel */
+.mega-panel {
+    position: absolute;
+    top: 0;
+    left: 240px;
+    width: calc(100% - 240px);
+    background-color: white;
+    box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+    z-index: 1000;
+    display: none;
+    padding: 2rem;
+}
+
+.mega-panel.active {
+    display: block;
+}
+
+.mega-panel-section {
+    display: none;
+}
+
+.mega-panel-section.active {
+    display: block;
+}
+
+.mega-panel h4 {
+    color: var(--accent-color);
+    font-size: 1.1rem;
+    margin-bottom: 1rem;
+    font-weight: 600;
+}
+
+.mega-panel ul li {
+    margin-bottom: 0.5rem;
+}
+
+.mega-panel ul li a {
+    color: var(--text-color);
+    text-decoration: none;
+    transition: color 0.3s ease;
+}
+
+.mega-panel ul li a:hover {
+    color: var(--accent-color);
+}
+
+/* Responsive Adjustments */
+@media (max-width: 991.98px) {
+    .category-sidebar {
+        min-height: auto;
+        border-right: none;
+        border-bottom: 1px solid rgba(0,0,0,0.1);
+        width: 100%;
+    }
+
+    .mega-panel {
+        position: static;
+        width: 100%;
+        box-shadow: none;
+        border-top: 1px solid rgba(0,0,0,0.1);
+    }
+
+    .carousel-item img {
+        height: 300px;
+    }
 } 

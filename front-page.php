@@ -1,0 +1,136 @@
+<?php get_header(); ?>
+
+<main id="primary" class="site-main">
+    <div class="container-lg">
+        <div class="row">
+            <!-- Sidebar with Categories -->
+            <div class="col-auto">
+                <div class="category-sidebar">
+                    <div class="list-group list-group-flush">
+                        <a href="#" class="list-group-item list-group-item-action category-item" data-category="sewing-machines">
+                            <i class="fas fa-sewing-machine me-2"></i>Sewing Machines
+                        </a>
+                        <a href="#" class="list-group-item list-group-item-action category-item" data-category="fabrics">
+                            <i class="fas fa-tshirt me-2"></i>Fabrics
+                        </a>
+                        <a href="#" class="list-group-item list-group-item-action category-item" data-category="accessories">
+                            <i class="fas fa-tools me-2"></i>Accessories
+                        </a>
+                        <a href="#" class="list-group-item list-group-item-action category-item" data-category="patterns">
+                            <i class="fas fa-cut me-2"></i>Patterns
+                        </a>
+                        <a href="#" class="list-group-item list-group-item-action category-item" data-category="notions">
+                            <i class="fas fa-th me-2"></i>Notions
+                        </a>
+                        <a href="#" class="list-group-item list-group-item-action category-item" data-category="books">
+                            <i class="fas fa-book me-2"></i>Books & Magazines
+                        </a>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Main Content Area with Carousel -->
+            <div class="col">
+                <div id="mainCarousel" class="carousel slide" data-bs-ride="carousel">
+                    <div class="carousel-indicators">
+                        <button type="button" data-bs-target="#mainCarousel" data-bs-slide-to="0" class="active"></button>
+                        <button type="button" data-bs-target="#mainCarousel" data-bs-slide-to="1"></button>
+                        <button type="button" data-bs-target="#mainCarousel" data-bs-slide-to="2"></button>
+                    </div>
+                    <div class="carousel-inner">
+                        <div class="carousel-item active">
+                            <img src="<?php echo get_template_directory_uri(); ?>/assets/images/img1.png" class="d-block w-100" alt="Slide 1">
+                        </div>
+                        <div class="carousel-item">
+                            <img src="<?php echo get_template_directory_uri(); ?>/assets/images/img2.png" class="d-block w-100" alt="Slide 2">
+                        </div>
+                        <div class="carousel-item">
+                            <img src="<?php echo get_template_directory_uri(); ?>/assets/images/slide3.jpg" class="d-block w-100" alt="Slide 3">
+                        </div>
+                    </div>
+                    <button class="carousel-control-prev" type="button" data-bs-target="#mainCarousel" data-bs-slide="prev">
+                        <span class="carousel-control-prev-icon"></span>
+                    </button>
+                    <button class="carousel-control-next" type="button" data-bs-target="#mainCarousel" data-bs-slide="next">
+                        <span class="carousel-control-next-icon"></span>
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Mega Panel (Hidden by default) -->
+    <div class="mega-panel">
+        <div class="mega-panel-content">
+            <!-- Sewing Machines Panel -->
+            <div class="mega-panel-section" data-category="sewing-machines">
+                <div class="row">
+                    <div class="col-md-4">
+                        <h4>Domestic Machines</h4>
+                        <ul class="list-unstyled">
+                            <li><a href="#">Basic Sewing Machines</a></li>
+                            <li><a href="#">Computerized Machines</a></li>
+                            <li><a href="#">Embroidery Machines</a></li>
+                            <li><a href="#">Quilting Machines</a></li>
+                        </ul>
+                    </div>
+                    <div class="col-md-4">
+                        <h4>Industrial Machines</h4>
+                        <ul class="list-unstyled">
+                            <li><a href="#">Heavy Duty Machines</a></li>
+                            <li><a href="#">Overlock Machines</a></li>
+                            <li><a href="#">Cover Stitch Machines</a></li>
+                            <li><a href="#">Specialty Machines</a></li>
+                        </ul>
+                    </div>
+                    <div class="col-md-4">
+                        <h4>Accessories</h4>
+                        <ul class="list-unstyled">
+                            <li><a href="#">Presser Feet</a></li>
+                            <li><a href="#">Needles</a></li>
+                            <li><a href="#">Maintenance Kits</a></li>
+                            <li><a href="#">Machine Parts</a></li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Fabrics Panel -->
+            <div class="mega-panel-section" data-category="fabrics">
+                <div class="row">
+                    <div class="col-md-4">
+                        <h4>Natural Fabrics</h4>
+                        <ul class="list-unstyled">
+                            <li><a href="#">Cotton</a></li>
+                            <li><a href="#">Linen</a></li>
+                            <li><a href="#">Wool</a></li>
+                            <li><a href="#">Silk</a></li>
+                        </ul>
+                    </div>
+                    <div class="col-md-4">
+                        <h4>Synthetic Fabrics</h4>
+                        <ul class="list-unstyled">
+                            <li><a href="#">Polyester</a></li>
+                            <li><a href="#">Nylon</a></li>
+                            <li><a href="#">Rayon</a></li>
+                            <li><a href="#">Spandex</a></li>
+                        </ul>
+                    </div>
+                    <div class="col-md-4">
+                        <h4>Specialty Fabrics</h4>
+                        <ul class="list-unstyled">
+                            <li><a href="#">Waterproof</a></li>
+                            <li><a href="#">Stretch</a></li>
+                            <li><a href="#">Fleece</a></li>
+                            <li><a href="#">Interfacing</a></li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Add more mega-panel sections for other categories -->
+        </div>
+    </div>
+</main>
+
+<?php get_footer(); ?> 
