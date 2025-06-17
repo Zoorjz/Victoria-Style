@@ -29,19 +29,55 @@
                     <span class="navbar-toggler-icon"></span>
                 </button>
 
-                <div class="collapse navbar-collapse" id="primary-menu">
-                    <?php
+                <div class="collapse navbar-collapse d-flex justify-content-between align-items-centers" id="primary-menu">
+                    <?php   
                     wp_nav_menu(array(
                         'theme_location' => 'primary',
                         'menu_id'        => 'primary-menu',
                         'container'      => false,
-                        'menu_class'     => 'navbar-nav ms-auto',
+                        'menu_class'     => 'navbar-nav me-lg-auto mb-2 mb-lg-0',
                         'fallback_cb'    => '__return_false',
                         'items_wrap'     => '<ul id="%1$s" class="%2$s">%3$s</ul>',
                         'depth'          => 2,
                         'walker'         => new Bootstrap_5_Nav_Walker()
                     ));
                     ?>
+                    <!-- Language Switcher -->
+                    <div class="language-switcher ms-auto me-3">
+                        <div class="btn-group" role="group" aria-label="Language switcher">
+                            <a href="#" class="btn btn-outline-secondary active" data-lang="rus">RUS</a>
+                            <a href="#" class="btn btn-outline-secondary" data-lang="geo">GEO</a>
+                            <a href="#" class="btn btn-outline-secondary" data-lang="eng">ENG</a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </nav>
+        
+        <!-- Secondary Navigation -->
+        <nav class="navbar navbar-expand-lg navbar-light bg-light border-top">
+            <div class="container">
+                <div class="collapse navbar-collapse justify-content-center" id="secondary-menu">
+                    <ul class="navbar-nav">
+                        <li class="nav-item">
+                            <a class="nav-link" href="#">About</a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link" href="#">Atelie</a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link" href="#">Cloth</a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link" href="#">Sewing Machines</a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link" href="#">Blog</a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link" href="#">Contacts</a>
+                        </li>
+                    </ul>
                 </div>
             </div>
         </nav>

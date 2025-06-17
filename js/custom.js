@@ -26,4 +26,23 @@ jQuery(document).ready(function($) {
             $(this).addClass('active');
         }
     });
+
+    // Language Switcher functionality
+    $('.language-switcher .btn').on('click', function(e) {
+        e.preventDefault();
+        var selectedLang = $(this).data('lang');
+        
+        // Remove active class from all buttons
+        $('.language-switcher .btn').removeClass('active');
+        // Add active class to clicked button
+        $(this).addClass('active');
+        
+        // Here you can add your language switching logic
+        // For example, you might want to:
+        // 1. Store the selected language in a cookie
+        // 2. Redirect to the appropriate language version
+        // 3. Update the content dynamically
+        
+        console.log('Selected language:', selectedLang);
+    });
 }); 
