@@ -2,7 +2,7 @@
 
 <main id="primary" class="site-main">
     <div class="container-lg">
-        <div class="row">
+        <div class="row position-relative">
             <!-- Sidebar with Categories -->
             <div class="col-auto">
                 <div class="category-sidebar">
@@ -56,80 +56,87 @@
                     </button>
                 </div>
             </div>
-        </div>
-    </div>
 
-    <!-- Mega Panel (Hidden by default) -->
-    <div class="mega-panel">
-        <div class="mega-panel-content">
-            <!-- Sewing Machines Panel -->
-            <div class="mega-panel-section" data-category="sewing-machines">
-                <div class="row">
-                    <div class="col-md-4">
-                        <h4>Domestic Machines</h4>
-                        <ul class="list-unstyled">
-                            <li><a href="#">Basic Sewing Machines</a></li>
-                            <li><a href="#">Computerized Machines</a></li>
-                            <li><a href="#">Embroidery Machines</a></li>
-                            <li><a href="#">Quilting Machines</a></li>
-                        </ul>
-                    </div>
-                    <div class="col-md-4">
-                        <h4>Industrial Machines</h4>
-                        <ul class="list-unstyled">
-                            <li><a href="#">Heavy Duty Machines</a></li>
-                            <li><a href="#">Overlock Machines</a></li>
-                            <li><a href="#">Cover Stitch Machines</a></li>
-                            <li><a href="#">Specialty Machines</a></li>
-                        </ul>
-                    </div>
-                    <div class="col-md-4">
-                        <h4>Accessories</h4>
-                        <ul class="list-unstyled">
-                            <li><a href="#">Presser Feet</a></li>
-                            <li><a href="#">Needles</a></li>
-                            <li><a href="#">Maintenance Kits</a></li>
-                            <li><a href="#">Machine Parts</a></li>
-                        </ul>
+            <!-- Mega Panel (Hidden by default) -->
+            <div class="mega-panel">
+                <div class="container-lg">
+                    <div class="mega-panel-content">
+                        <!-- Sewing Machines Panel -->
+                        <div class="mega-panel-section" data-category="sewing-machines">
+                            <div class="row">
+                                <div class="col-md-4">
+                                    <h4>Domestic Machines</h4>
+                                    <ul class="list-unstyled">
+                                        <li><a href="#">Basic Sewing Machines</a></li>
+                                        <li><a href="#">Computerized Machines</a></li>
+                                        <li><a href="#">Embroidery Machines</a></li>
+                                        <li><a href="#">Quilting Machines</a></li>
+                                    </ul>
+                                </div>
+                                <div class="col-md-4">
+                                    <h4>Industrial Machines</h4>
+                                    <ul class="list-unstyled">
+                                        <li><a href="#">Heavy Duty Machines</a></li>
+                                        <li><a href="#">Overlock Machines</a></li>
+                                        <li><a href="#">Cover Stitch Machines</a></li>
+                                        <li><a href="#">Specialty Machines</a></li>
+                                    </ul>
+                                </div>
+                                <div class="col-md-4">
+                                    <h4>Accessories</h4>
+                                    <ul class="list-unstyled">
+                                        <li><a href="#">Presser Feet</a></li>
+                                        <li><a href="#">Needles</a></li>
+                                        <li><a href="#">Maintenance Kits</a></li>
+                                        <li><a href="#">Machine Parts</a></li>
+                                    </ul>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Fabrics Panel -->
+                        <div class="mega-panel-section" data-category="fabrics">
+                            <div class="row">
+                                <div class="col-md-4">
+                                    <h4>Natural Fabrics</h4>
+                                    <ul class="list-unstyled">
+                                        <li><a href="#">Cotton</a></li>
+                                        <li><a href="#">Linen</a></li>
+                                        <li><a href="#">Wool</a></li>
+                                        <li><a href="#">Silk</a></li>
+                                    </ul>
+                                </div>
+                                <div class="col-md-4">
+                                    <h4>Synthetic Fabrics</h4>
+                                    <ul class="list-unstyled">
+                                        <li><a href="#">Polyester</a></li>
+                                        <li><a href="#">Nylon</a></li>
+                                        <li><a href="#">Rayon</a></li>
+                                        <li><a href="#">Spandex</a></li>
+                                    </ul>
+                                </div>
+                                <div class="col-md-4">
+                                    <h4>Specialty Fabrics</h4>
+                                    <ul class="list-unstyled">
+                                        <li><a href="#">Waterproof</a></li>
+                                        <li><a href="#">Stretch</a></li>
+                                        <li><a href="#">Fleece</a></li>
+                                        <li><a href="#">Interfacing</a></li>
+                                    </ul>
+                                </div>
+                            </div>
+                        </div>
                     </div>
                 </div>
             </div>
-
-            <!-- Fabrics Panel -->
-            <div class="mega-panel-section" data-category="fabrics">
-                <div class="row">
-                    <div class="col-md-4">
-                        <h4>Natural Fabrics</h4>
-                        <ul class="list-unstyled">
-                            <li><a href="#">Cotton</a></li>
-                            <li><a href="#">Linen</a></li>
-                            <li><a href="#">Wool</a></li>
-                            <li><a href="#">Silk</a></li>
-                        </ul>
-                    </div>
-                    <div class="col-md-4">
-                        <h4>Synthetic Fabrics</h4>
-                        <ul class="list-unstyled">
-                            <li><a href="#">Polyester</a></li>
-                            <li><a href="#">Nylon</a></li>
-                            <li><a href="#">Rayon</a></li>
-                            <li><a href="#">Spandex</a></li>
-                        </ul>
-                    </div>
-                    <div class="col-md-4">
-                        <h4>Specialty Fabrics</h4>
-                        <ul class="list-unstyled">
-                            <li><a href="#">Waterproof</a></li>
-                            <li><a href="#">Stretch</a></li>
-                            <li><a href="#">Fleece</a></li>
-                            <li><a href="#">Interfacing</a></li>
-                        </ul>
-                    </div>
-                </div>
-            </div>
-
-            <!-- Add more mega-panel sections for other categories -->
         </div>
+        <?php if ( have_posts() ) : ?>
+			<?php while ( have_posts() ) : the_post(); ?>
+				<div class="frontpage-content py-5">
+					<?php the_content(); ?>
+				</div>
+			<?php endwhile; ?>
+		<?php endif; ?>
     </div>
 </main>
 

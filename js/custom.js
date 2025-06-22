@@ -48,30 +48,44 @@ jQuery(document).ready(function($) {
 
     // Mega Panel functionality
     let megaPanelTimeout;
+    let isHoveringPanel = false;
     
     $('.category-item').hover(
         function() {
             const category = $(this).data('category');
+            const hasSubcategories = $(`.mega-panel-section[data-category="${category}"]`).length > 0;
+            
             clearTimeout(megaPanelTimeout);
             
-            // Show mega panel
-            $('.mega-panel').addClass('active');
-            // Show corresponding section
-            $('.mega-panel-section').removeClass('active');
-            $(`.mega-panel-section[data-category="${category}"]`).addClass('active');
+            if (hasSubcategories) {
+                // Show mega panel
+                $('.mega-panel').addClass('active');
+                // Show corresponding section
+                $('.mega-panel-section').removeClass('active');
+                $(`.mega-panel-section[data-category="${category}"]`).addClass('active');
+            } else {
+                // Hide mega panel immediately for categories without subcategories
+                if (!isHoveringPanel) {
+                    $('.mega-panel').removeClass('active');
+                }
+            }
         },
         function() {
-            megaPanelTimeout = setTimeout(function() {
-                $('.mega-panel').removeClass('active');
-            }, 200);
+            if (!isHoveringPanel) {
+                megaPanelTimeout = setTimeout(function() {
+                    $('.mega-panel').removeClass('active');
+                }, 200);
+            }
         }
     );
 
     $('.mega-panel').hover(
         function() {
+            isHoveringPanel = true;
             clearTimeout(megaPanelTimeout);
         },
         function() {
+            isHoveringPanel = false;
             megaPanelTimeout = setTimeout(function() {
                 $('.mega-panel').removeClass('active');
             }, 200);

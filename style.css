@@ -244,17 +244,21 @@ body {
 .mega-panel {
     position: absolute;
     top: 0;
-    left: 240px;
-    width: calc(100% - 240px);
+    left: 250px;
+    right: 0;
+    max-width: 1060px;
     background-color: white;
     box-shadow: 0 4px 12px rgba(0,0,0,0.1);
     z-index: 1000;
     display: none;
-    padding: 2rem;
 }
 
 .mega-panel.active {
     display: block;
+}
+
+.mega-panel-content {
+    padding: 2rem;
 }
 
 .mega-panel-section {
@@ -298,6 +302,7 @@ body {
     .mega-panel {
         position: static;
         width: 100%;
+        left: 0;
         box-shadow: none;
         border-top: 1px solid rgba(0,0,0,0.1);
     }
