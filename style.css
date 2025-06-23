@@ -13,9 +13,9 @@ Text Domain: victoria-style
 :root {
     --primary-color: #ffffff;
     --secondary-color: #f8f9fa;
-    --accent-color: #d4af37;
+    --accent-color: #C79A1B;
     --text-color: #333333;
-    --link-color: #d4af37;
+    --link-color: #C79A1B;
     --link-hover-color: #b38f2e;
 }
 
@@ -39,6 +39,17 @@ body {
     color: var(--accent-color) !important;
     font-weight: 700;
 }
+
+.custom-logo {
+    max-height: 100px;   /* adjust value */
+    width: auto;
+}
+
+/* .navbar .custom-logo-link {
+    display: flex;
+    align-items: center;
+    margin-right: 1rem;
+} */
 
 .nav-link {
     color: var(--text-color) !important;
@@ -145,8 +156,8 @@ body {
 
 .navbar-light .navbar-nav .nav-link {
     color: var(--text-color);
-    padding: 0.5rem 1rem;
-    font-size: 0.95rem;
+    padding: 0.5rem 2rem;
+    font-size: 1.1rem;
     transition: color 0.3s ease;
 }
 
@@ -188,7 +199,7 @@ body {
 /* Category Sidebar */
 .category-sidebar {
     background-color: var(--secondary-color);
-    min-height: calc(100vh - 200px);
+    min-height: 500px;
     padding: 2rem 0;
     border-right: 1px solid rgba(0,0,0,0.1);
     width: 240px;
@@ -196,7 +207,7 @@ body {
 
 .category-sidebar .list-group-item {
     border: none;
-    padding: 1rem 1.5rem;
+    padding: 2rem 1.5rem;
     color: var(--text-color);
     transition: all 0.3s ease;
     background: transparent;

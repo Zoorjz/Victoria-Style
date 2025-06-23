@@ -22,9 +22,6 @@
                         <a href="#" class="list-group-item list-group-item-action category-item" data-category="notions">
                             <i class="fas fa-th me-2"></i>Notions
                         </a>
-                        <a href="#" class="list-group-item list-group-item-action category-item" data-category="books">
-                            <i class="fas fa-book me-2"></i>Books & Magazines
-                        </a>
                     </div>
                 </div>
             </div>
@@ -39,13 +36,31 @@
                     </div>
                     <div class="carousel-inner">
                         <div class="carousel-item active">
-                            <img src="<?php echo get_template_directory_uri(); ?>/assets/images/img1.png" class="d-block w-100" alt="Slide 1">
+                            <a href="https://example.com/sewing-machines">
+                                <img src="<?php echo get_template_directory_uri(); ?>/assets/images/img1.png" class="d-block w-100" alt="Sewing Machines">
+                                <div class="carousel-caption d-none d-md-block">
+                                    <h5>Sewing Machines</h5>
+                                    <p>Discover our range of sewing machines for all skill levels.</p>
+                                </div>
+                            </a>
                         </div>
                         <div class="carousel-item">
-                            <img src="<?php echo get_template_directory_uri(); ?>/assets/images/img2.png" class="d-block w-100" alt="Slide 2">
+                            <a href="https://example.com/fabrics">
+                                <img src="<?php echo get_template_directory_uri(); ?>/assets/images/img2.png" class="d-block w-100" alt="Fabrics">
+                                <div class="carousel-caption d-none d-md-block">
+                                    <h5>Fabrics</h5>
+                                    <p>Explore a variety of fabrics for your next project.</p>
+                                </div>
+                            </a>
                         </div>
                         <div class="carousel-item">
-                            <img src="<?php echo get_template_directory_uri(); ?>/assets/images/slide3.jpg" class="d-block w-100" alt="Slide 3">
+                            <a href="https://example.com/accessories">
+                                <img src="<?php echo get_template_directory_uri(); ?>/assets/images/slide3.jpg" class="d-block w-100" alt="Accessories">
+                                <div class="carousel-caption d-none d-md-block">
+                                    <h5>Accessories</h5>
+                                    <p>Find the perfect accessories to complement your sewing.</p>
+                                </div>
+                            </a>
                         </div>
                     </div>
                     <button class="carousel-control-prev" type="button" data-bs-target="#mainCarousel" data-bs-slide="prev">
@@ -113,15 +128,6 @@
                                         <li><a href="#">Nylon</a></li>
                                         <li><a href="#">Rayon</a></li>
                                         <li><a href="#">Spandex</a></li>
-                                    </ul>
-                                </div>
-                                <div class="col-md-4">
-                                    <h4>Specialty Fabrics</h4>
-                                    <ul class="list-unstyled">
-                                        <li><a href="#">Waterproof</a></li>
-                                        <li><a href="#">Stretch</a></li>
-                                        <li><a href="#">Fleece</a></li>
-                                        <li><a href="#">Interfacing</a></li>
                                     </ul>
                                 </div>
                             </div>

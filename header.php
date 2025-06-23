@@ -16,9 +16,14 @@
                 <?php
                 if (has_custom_logo()) {
                     the_custom_logo();
+                    ?>
+                    <a class="navbar-brand site-title" href="<?php echo esc_url(home_url('/')); ?>">
+                        <?php bloginfo('name'); ?>
+                    </a>
+                    <?php
                 } else {
                     ?>
-                    <a class="navbar-brand" href="<?php echo esc_url(home_url('/')); ?>">
+                    <a class="navbar-brand site-title" href="<?php echo esc_url(home_url('/')); ?>">
                         <?php bloginfo('name'); ?>
                     </a>
                     <?php
