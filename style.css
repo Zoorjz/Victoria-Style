@@ -251,6 +251,46 @@ body {
     background-color: var(--accent-color);
 }
 
+/* Carousel Caption Styling */
+.carousel-caption {
+    bottom: 2rem;
+    left: 50%;
+    right: auto;
+    transform: translateX(-50%);
+    max-width: 80%;
+    padding: 0;
+    background: none;
+}
+
+.carousel-caption h5 {
+    font-size: 1.8rem;
+    font-weight: 700;
+    margin-bottom: 0.5rem;
+    color: white;
+    text-shadow: 2px 2px 6px rgba(0, 0, 0, 0.9), 1px 1px 4px rgba(0, 0, 0, 0.8);
+}
+
+.carousel-caption p {
+    font-size: 1.2rem;
+    margin-bottom: 0;
+    color: white;
+    text-shadow: 2px 2px 6px rgba(0, 0, 0, 0.9), 1px 1px 4px rgba(0, 0, 0, 0.8);
+}
+
+@media (max-width: 768px) {
+    .carousel-caption {
+        max-width: 90%;
+    }
+    
+    .carousel-caption h5 {
+        font-size: 1.4rem;
+    }
+    
+    .carousel-caption p {
+        font-size: 1rem;
+    }
+}
+
 /* Mega Panel */
 .mega-panel {
     position: absolute;

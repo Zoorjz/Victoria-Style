@@ -28,47 +28,72 @@
 
             <!-- Main Content Area with Carousel -->
             <div class="col">
+<?php
+                // Get carousel slides from settings
+                $carousel_slides = get_option('carousel_slides', array());
+                
+                // Filter out empty slides
+                $carousel_slides = array_filter($carousel_slides, function($slide) {
+                    return !empty($slide['image']) && !empty($slide['title']);
+                });
+                
+                // If no slides, show default content
+                if (empty($carousel_slides)) {
+                    $carousel_slides = array(
+                        array(
+                            'title' => 'Sewing Machines',
+                            'description' => 'Discover our range of sewing machines for all skill levels.',
+                            'link' => '#',
+                            'image' => get_template_directory_uri() . '/assets/images/img1.png'
+                        ),
+                        array(
+                            'title' => 'Fabrics',
+                            'description' => 'Explore a variety of fabrics for your next project.',
+                            'link' => '#',
+                            'image' => get_template_directory_uri() . '/assets/images/img2.png'
+                        )
+                    );
+                }
+                ?>
                 <div id="mainCarousel" class="carousel slide" data-bs-ride="carousel">
+                    <?php if (count($carousel_slides) > 1) : ?>
                     <div class="carousel-indicators">
-                        <button type="button" data-bs-target="#mainCarousel" data-bs-slide-to="0" class="active"></button>
-                        <button type="button" data-bs-target="#mainCarousel" data-bs-slide-to="1"></button>
-                        <button type="button" data-bs-target="#mainCarousel" data-bs-slide-to="2"></button>
+                        <?php foreach ($carousel_slides as $index => $slide) : ?>
+                        <button type="button" data-bs-target="#mainCarousel" data-bs-slide-to="<?php echo $index; ?>" <?php echo $index === 0 ? 'class="active"' : ''; ?>></button>
+                        <?php endforeach; ?>
                     </div>
+                    <?php endif; ?>
                     <div class="carousel-inner">
-                        <div class="carousel-item active">
-                            <a href="https://example.com/sewing-machines">
-                                <img src="<?php echo content_url(); ?>/uploads/2025/06/Brother_F440-.jpg" class="d-block w-100" alt="Sewing Machines">
+                        <?php foreach ($carousel_slides as $index => $slide) : ?>
+                        <div class="carousel-item <?php echo $index === 0 ? 'active' : ''; ?>">
+                            <?php if (!empty($slide['link'])) : ?>
+                            <a href="<?php echo esc_url($slide['link']); ?>">
+                            <?php endif; ?>
+                                <img src="<?php echo esc_url($slide['image']); ?>" class="d-block w-100" alt="<?php echo esc_attr($slide['title']); ?>">
+                                <?php if (!empty($slide['title']) || !empty($slide['description'])) : ?>
                                 <div class="carousel-caption d-none d-md-block">
-                                    <h5>Sewing Machines</h5>
-                                    <p>Discover our range of sewing machines for all skill levels.</p>
+                                    <?php if (!empty($slide['title'])) : ?>
+                                    <h5><?php echo esc_html($slide['title']); ?></h5>
+                                    <?php endif; ?>
+                                    <?php if (!empty($slide['description'])) : ?>
+                                    <p><?php echo esc_html($slide['description']); ?></p>
+                                    <?php endif; ?>
                                 </div>
+                                <?php endif; ?>
+                            <?php if (!empty($slide['link'])) : ?>
                             </a>
+                            <?php endif; ?>
                         </div>
-                        <div class="carousel-item">
-                            <a href="https://example.com/fabrics">
-                                <img src="<?php echo get_template_directory_uri(); ?>/assets/images/img2.png" class="d-block w-100" alt="Fabrics">
-                                <div class="carousel-caption d-none d-md-block">
-                                    <h5>Fabrics</h5>
-                                    <p>Explore a variety of fabrics for your next project.</p>
-                                </div>
-                            </a>
-                        </div>
-                        <div class="carousel-item">
-                            <a href="https://example.com/accessories">
-                                <img src="<?php echo get_template_directory_uri(); ?>/assets/images/slide3.jpg" class="d-block w-100" alt="Accessories">
-                                <div class="carousel-caption d-none d-md-block">
-                                    <h5>Accessories</h5>
-                                    <p>Find the perfect accessories to complement your sewing.</p>
-                                </div>
-                            </a>
-                        </div>
+                        <?php endforeach; ?>
                     </div>
+                    <?php if (count($carousel_slides) > 1) : ?>
                     <button class="carousel-control-prev" type="button" data-bs-target="#mainCarousel" data-bs-slide="prev">
                         <span class="carousel-control-prev-icon"></span>
                     </button>
                     <button class="carousel-control-next" type="button" data-bs-target="#mainCarousel" data-bs-slide="next">
                         <span class="carousel-control-next-icon"></span>
                     </button>
+                    <?php endif; ?>
                 </div>
             </div>
 
