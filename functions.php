@@ -581,6 +581,161 @@ function victoria_style_fix_oembed() {
 }
 add_action('init', 'victoria_style_fix_oembed');
 
+// Add navigation management to WordPress admin
+function victoria_style_navigation_settings() {
+    add_options_page(
+        'Navigation Management',
+        'Navigation Management',
+        'manage_options',
+        'navigation-management',
+        'victoria_style_navigation_settings_page'
+    );
+}
+add_action('admin_menu', 'victoria_style_navigation_settings');
+
+// Register navigation settings
+function victoria_style_navigation_settings_init() {
+    register_setting('navigation_settings', 'custom_secondary_navigation_items');
+    
+    add_settings_section(
+        'navigation_section',
+        'Navigation Menu Management',
+        'victoria_style_navigation_section_callback',
+        'navigation_settings'
+    );
+    
+    add_settings_field(
+        'secondary_navigation',
+        'Navigation Menu Items',
+        'victoria_style_secondary_navigation_callback',
+        'navigation_settings',
+        'navigation_section'
+    );
+}
+add_action('admin_init', 'victoria_style_navigation_settings_init');
+
+// Section callback
+function victoria_style_navigation_section_callback() {
+    echo '<p>Manage your navigation menu items here. You can add, remove, and reorder menu items for the secondary navigation bar.</p>';
+}
+
+
+// Navigation callback
+function victoria_style_secondary_navigation_callback() {
+    $nav_items = get_option('custom_secondary_navigation_items', array());
+    
+    // Default navigation items if none exist
+    if (empty($nav_items)) {
+        $nav_items = array(
+            array('title' => 'About', 'url' => '#', 'target' => '_self'),
+            array('title' => 'Atelie', 'url' => '#', 'target' => '_self'),
+            array('title' => 'Cloth', 'url' => '#', 'target' => '_self'),
+            array('title' => 'Sewing Machines', 'url' => '#', 'target' => '_self'),
+            array('title' => 'Blog', 'url' => '#', 'target' => '_self'),
+            array('title' => 'Contacts', 'url' => '#', 'target' => '_self')
+        );
+    }
+    
+    echo '<div id="nav-container">';
+    foreach ($nav_items as $index => $item) {
+        echo '<div class="nav-item-container" style="border: 1px solid #ddd; padding: 15px; margin: 10px 0; background: #f9f9f9;">';
+        echo '<h5>Menu Item ' . ($index + 1) . '</h5>';
+        
+        echo '<p><label><strong>Title:</strong><br>';
+        echo '<input type="text" name="custom_secondary_navigation_items[' . $index . '][title]" value="' . esc_attr($item['title']) . '" style="width: 300px;" /></label></p>';
+        
+        echo '<p><label><strong>URL:</strong><br>';
+        echo '<input type="url" name="custom_secondary_navigation_items[' . $index . '][url]" value="' . esc_attr($item['url']) . '" style="width: 300px;" placeholder="https://example.com" /></label></p>';
+        
+        echo '<p><label><strong>Target:</strong><br>';
+        echo '<select name="custom_secondary_navigation_items[' . $index . '][target]" style="width: 200px;">';
+        echo '<option value="_self"' . selected($item['target'], '_self', false) . '>Same Window</option>';
+        echo '<option value="_blank"' . selected($item['target'], '_blank', false) . '>New Window</option>';
+        echo '</select></label></p>';
+        
+        echo '<button type="button" class="button remove-nav-item" onclick="this.closest(\'.nav-item-container\').remove();">Remove Item</button>';
+        echo '</div>';
+    }
+    echo '</div>';
+    
+    echo '<p><button type="button" id="add-nav-item" class="button">Add New Menu Item</button></p>';
+}
+
+// Navigation settings page
+function victoria_style_navigation_settings_page() {
+    ?>
+    <div class="wrap">
+        <h1>Navigation Management</h1>
+        <form method="post" action="options.php">
+            <?php
+            settings_fields('navigation_settings');
+            do_settings_sections('navigation_settings');
+            submit_button();
+            ?>
+        </form>
+    </div>
+    
+    <script>
+    jQuery(document).ready(function($) {
+        // Add new navigation item
+        $('#add-nav-item').click(function() {
+            var container = $('#nav-container');
+            var itemCount = container.find('.nav-item-container').length;
+            
+            var newItem = '<div class="nav-item-container" style="border: 1px solid #ddd; padding: 15px; margin: 10px 0; background: #f9f9f9;">' +
+                '<h5>Menu Item ' + (itemCount + 1) + '</h5>' +
+                '<p><label><strong>Title:</strong><br>' +
+                '<input type="text" name="custom_secondary_navigation_items[' + itemCount + '][title]" value="" style="width: 300px;" /></label></p>' +
+                '<p><label><strong>URL:</strong><br>' +
+                '<input type="url" name="custom_secondary_navigation_items[' + itemCount + '][url]" value="" style="width: 300px;" placeholder="https://example.com" /></label></p>' +
+                '<p><label><strong>Target:</strong><br>' +
+                '<select name="custom_secondary_navigation_items[' + itemCount + '][target]" style="width: 200px;">' +
+                '<option value="_self">Same Window</option>' +
+                '<option value="_blank">New Window</option>' +
+                '</select></label></p>' +
+                '<button type="button" class="button remove-nav-item" onclick="this.closest(\'.nav-item-container\').remove();">Remove Item</button>' +
+                '</div>';
+            
+            container.append(newItem);
+        });
+    });
+    </script>
+    
+    <style>
+    .nav-item-container {
+        border-radius: 5px;
+    }
+    .remove-nav-item {
+        background: #dc3545 !important;
+        border-color: #dc3545 !important;
+        color: white !important;
+    }
+    </style>
+    <?php
+}
+
+// Process and sanitize navigation data before saving
+function victoria_style_process_navigation($input) {
+    $processed = array();
+    
+    if (is_array($input)) {
+        foreach ($input as $item) {
+            if (!empty($item['title']) && !empty($item['url'])) {
+                $processed[] = array(
+                    'title' => sanitize_text_field($item['title']),
+                    'url' => esc_url_raw($item['url']),
+                    'target' => in_array($item['target'], array('_self', '_blank')) ? $item['target'] : '_self'
+                );
+            }
+        }
+    }
+    
+    return $processed;
+}
+
+// Hook to process navigation items before saving
+add_filter('pre_update_option_custom_secondary_navigation_items', 'victoria_style_process_navigation');
+
 // Specifically handle YouTube embeds
 function victoria_style_youtube_embed_fix($content) {
     // Pattern to match YouTube URLs

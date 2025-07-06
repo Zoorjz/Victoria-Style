@@ -35,7 +35,7 @@
                 </button>
 
                 <div class="collapse navbar-collapse d-flex justify-content-between align-items-centers" id="primary-menu">
-                    <?php   
+                    <?php
                     wp_nav_menu(array(
                         'theme_location' => 'primary',
                         'menu_id'        => 'primary-menu',
@@ -63,26 +63,32 @@
         <nav class="navbar navbar-expand-lg navbar-light bg-light border-top">
             <div class="container">
                 <div class="collapse navbar-collapse justify-content-center" id="secondary-menu">
-                    <ul class="navbar-nav">
-                        <li class="nav-item">
-                            <a class="nav-link" href="#">About</a>
-                        </li>
-                        <li class="nav-item">
-                            <a class="nav-link" href="#">Atelie</a>
-                        </li>
-                        <li class="nav-item">
-                            <a class="nav-link" href="#">Cloth</a>
-                        </li>
-                        <li class="nav-item">
-                            <a class="nav-link" href="#">Sewing Machines</a>
-                        </li>
-                        <li class="nav-item">
-                            <a class="nav-link" href="#">Blog</a>
-                        </li>
-                        <li class="nav-item">
-                            <a class="nav-link" href="#">Contacts</a>
-                        </li>
-                    </ul>
+                    <?php
+                    // Get custom secondary navigation items
+                    $custom_secondary_nav_items = get_option('custom_secondary_navigation_items', array());
+                    
+                    // Default secondary navigation items if none exist
+                    if (empty($custom_secondary_nav_items)) {
+                        $custom_secondary_nav_items = array(
+                            array('title' => 'About', 'url' => '#', 'target' => '_self'),
+                            array('title' => 'Atelie', 'url' => '#', 'target' => '_self'),
+                            array('title' => 'Cloth', 'url' => '#', 'target' => '_self'),
+                            array('title' => 'Sewing Machines', 'url' => '#', 'target' => '_self'),
+                            array('title' => 'Blog', 'url' => '#', 'target' => '_self'),
+                            array('title' => 'Contacts', 'url' => '#', 'target' => '_self')
+                        );
+                    }
+                    
+                    if (!empty($custom_secondary_nav_items)) {
+                        echo '<ul class="navbar-nav">';
+                        foreach ($custom_secondary_nav_items as $item) {
+                            echo '<li class="nav-item">';
+                            echo '<a class="nav-link" href="' . esc_url($item['url']) . '" target="' . esc_attr($item['target']) . '">' . esc_html($item['title']) . '</a>';
+                            echo '</li>';
+                        }
+                        echo '</ul>';
+                    }
+                    ?>
                 </div>
             </div>
         </nav>
