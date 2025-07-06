@@ -37,7 +37,7 @@
                     <div class="carousel-inner">
                         <div class="carousel-item active">
                             <a href="https://example.com/sewing-machines">
-                                <img src="<?php echo get_template_directory_uri(); ?>/assets/images/img1.png" class="d-block w-100" alt="Sewing Machines">
+                                <img src="<?php echo content_url(); ?>/uploads/2025/06/Brother_F440-.jpg" class="d-block w-100" alt="Sewing Machines">
                                 <div class="carousel-caption d-none d-md-block">
                                     <h5>Sewing Machines</h5>
                                     <p>Discover our range of sewing machines for all skill levels.</p>
