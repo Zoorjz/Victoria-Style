@@ -262,4 +262,350 @@ function victoria_style_admin_scripts($hook) {
         wp_enqueue_script('jquery');
     }
 }
-add_action('admin_enqueue_scripts', 'victoria_style_admin_scripts'); 
+add_action('admin_enqueue_scripts', 'victoria_style_admin_scripts');
+
+// Add category management to WordPress admin
+function victoria_style_category_settings() {
+    add_options_page(
+        'Category Management',
+        'Category Management',
+        'manage_options',
+        'category-management',
+        'victoria_style_category_settings_page'
+    );
+}
+add_action('admin_menu', 'victoria_style_category_settings');
+
+// Register category settings
+function victoria_style_category_settings_init() {
+    register_setting('category_settings', 'homepage_categories');
+}
+add_action('admin_init', 'victoria_style_category_settings_init');
+
+// Category settings page
+function victoria_style_category_settings_page() {
+    $categories = get_option('homepage_categories', array());
+    
+    // Default categories if none exist
+    if (empty($categories)) {
+        $categories = array(
+            array(
+                'name' => 'Sewing Machines',
+                'icon' => 'fas fa-sewing-machine',
+                'slug' => 'sewing-machines',
+                'subcategories' => array(
+                    array(
+                        'title' => 'Home Sewing Machines',
+                        'items' => array('VERITAS', 'Brother', 'Janome', 'JAPSEW')
+                    ),
+                    array(
+                        'title' => 'Industrial Machines',
+                        'items' => array('Heavy Duty Machines', 'Overlock Machines', 'Cover Stitch Machines', 'Specialty Machines')
+                    ),
+                    array(
+                        'title' => 'Accessories',
+                        'items' => array('Presser Feet', 'Needles', 'Maintenance Kits', 'Machine Parts')
+                    )
+                )
+            ),
+            array(
+                'name' => 'Fabrics',
+                'icon' => 'fas fa-tshirt',
+                'slug' => 'fabrics',
+                'subcategories' => array(
+                    array(
+                        'title' => 'Natural Fabrics',
+                        'items' => array('Cotton', 'Linen', 'Wool', 'Silk')
+                    ),
+                    array(
+                        'title' => 'Synthetic Fabrics',
+                        'items' => array('Polyester', 'Nylon', 'Rayon', 'Spandex')
+                    )
+                )
+            ),
+            array(
+                'name' => 'Accessories',
+                'icon' => 'fas fa-tools',
+                'slug' => 'accessories',
+                'subcategories' => array()
+            ),
+            array(
+                'name' => 'Patterns',
+                'icon' => 'fas fa-cut',
+                'slug' => 'patterns',
+                'subcategories' => array()
+            )
+        );
+    }
+    
+    ?>
+    <div class="wrap">
+        <h1>Category Management</h1>
+        <p>Manage your homepage categories and their subcategories here.</p>
+        
+        <form method="post" action="options.php">
+            <?php settings_fields('category_settings'); ?>
+            
+            <div id="categories-container">
+                <?php foreach ($categories as $index => $category) : ?>
+                    <div class="category-item" style="border: 1px solid #ddd; padding: 20px; margin: 15px 0; background: #f9f9f9;">
+                        <h3>Category <?php echo ($index + 1); ?></h3>
+                        
+                        <table class="form-table">
+                            <tr>
+                                <th><label>Category Name:</label></th>
+                                <td><input type="text" name="homepage_categories[<?php echo $index; ?>][name]" value="<?php echo esc_attr($category['name']); ?>" style="width: 300px;" /></td>
+                            </tr>
+                            <tr>
+                                <th><label>Icon Class:</label></th>
+                                <td><input type="text" name="homepage_categories[<?php echo $index; ?>][icon]" value="<?php echo esc_attr($category['icon']); ?>" style="width: 300px;" placeholder="fas fa-icon-name" /></td>
+                            </tr>
+                            <tr>
+                                <th><label>URL Slug:</label></th>
+                                <td><input type="text" name="homepage_categories[<?php echo $index; ?>][slug]" value="<?php echo esc_attr($category['slug']); ?>" style="width: 300px;" placeholder="category-slug" /></td>
+                            </tr>
+                            <tr>
+                                <th><label>Category Link URL:</label></th>
+                                <td><input type="url" name="homepage_categories[<?php echo $index; ?>][link]" value="<?php echo esc_attr(isset($category['link']) ? $category['link'] : ''); ?>" style="width: 300px;" placeholder="https://example.com/category" /></td>
+                            </tr>
+                        </table>
+                        
+                        <h4>Subcategories</h4>
+                        <div class="subcategories-container">
+                            <?php if (!empty($category['subcategories'])) : ?>
+                                <?php foreach ($category['subcategories'] as $sub_index => $subcategory) : ?>
+                                    <div class="subcategory-item" style="border: 1px solid #ccc; padding: 15px; margin: 10px 0; background: white;">
+                                        <h5>Subcategory <?php echo ($sub_index + 1); ?></h5>
+                                        
+                                        <p><label><strong>Title:</strong><br>
+                                        <input type="text" name="homepage_categories[<?php echo $index; ?>][subcategories][<?php echo $sub_index; ?>][title]" value="<?php echo esc_attr($subcategory['title']); ?>" style="width: 100%;" /></label></p>
+                                        
+                                        <p><label><strong>Title Link URL:</strong><br>
+                                        <input type="url" name="homepage_categories[<?php echo $index; ?>][subcategories][<?php echo $sub_index; ?>][title_link]" value="<?php echo esc_attr(isset($subcategory['title_link']) ? $subcategory['title_link'] : ''); ?>" style="width: 100%;" placeholder="https://example.com/category" /></label></p>
+                                        
+                                        <p><label><strong>Items (format: "Item Name|URL" one per line):</strong><br>
+                                        <small>Example: Cotton Fabric|https://example.com/cotton<br>Linen|https://example.com/linen</small><br>
+                                        <textarea name="homepage_categories[<?php echo $index; ?>][subcategories][<?php echo $sub_index; ?>][items]" style="width: 100%; height: 120px;"><?php 
+                                        if (!empty($subcategory['items'])) {
+                                            $formatted_items = array();
+                                            foreach ($subcategory['items'] as $item) {
+                                                if (is_array($item)) {
+                                                    $formatted_items[] = $item['name'] . '|' . $item['url'];
+                                                } else {
+                                                    $formatted_items[] = $item . '|#';
+                                                }
+                                            }
+                                            echo esc_textarea(implode("\n", $formatted_items));
+                                        }
+                                        ?></textarea></label></p>
+                                        
+                                        <button type="button" class="button remove-subcategory" onclick="this.closest('.subcategory-item').remove();">Remove Subcategory</button>
+                                    </div>
+                                <?php endforeach; ?>
+                            <?php endif; ?>
+                        </div>
+                        
+                        <button type="button" class="button add-subcategory" data-category-index="<?php echo $index; ?>">Add Subcategory</button>
+                        <button type="button" class="button remove-category" onclick="this.closest('.category-item').remove();" style="margin-left: 10px; background: #dc3545; color: white;">Remove Category</button>
+                    </div>
+                <?php endforeach; ?>
+            </div>
+            
+            <p><button type="button" id="add-category" class="button button-primary">Add New Category</button></p>
+            
+            <?php submit_button(); ?>
+        </form>
+    </div>
+    
+    <script>
+    jQuery(document).ready(function($) {
+        var categoryIndex = <?php echo count($categories); ?>;
+        
+        // Add new category
+        $('#add-category').click(function() {
+            var newCategory = '<div class="category-item" style="border: 1px solid #ddd; padding: 20px; margin: 15px 0; background: #f9f9f9;">' +
+                '<h3>Category ' + (categoryIndex + 1) + '</h3>' +
+                '<table class="form-table">' +
+                '<tr><th><label>Category Name:</label></th><td><input type="text" name="homepage_categories[' + categoryIndex + '][name]" value="" style="width: 300px;" /></td></tr>' +
+                '<tr><th><label>Icon Class:</label></th><td><input type="text" name="homepage_categories[' + categoryIndex + '][icon]" value="" style="width: 300px;" placeholder="fas fa-icon-name" /></td></tr>' +
+                '<tr><th><label>URL Slug:</label></th><td><input type="text" name="homepage_categories[' + categoryIndex + '][slug]" value="" style="width: 300px;" placeholder="category-slug" /></td></tr>' +
+                '<tr><th><label>Category Link URL:</label></th><td><input type="url" name="homepage_categories[' + categoryIndex + '][link]" value="" style="width: 300px;" placeholder="https://example.com/category" /></td></tr>' +
+                '</table>' +
+                '<h4>Subcategories</h4>' +
+                '<div class="subcategories-container"></div>' +
+                '<button type="button" class="button add-subcategory" data-category-index="' + categoryIndex + '">Add Subcategory</button>' +
+                '<button type="button" class="button remove-category" onclick="this.closest(\'.category-item\').remove();" style="margin-left: 10px; background: #dc3545; color: white;">Remove Category</button>' +
+                '</div>';
+            
+            $('#categories-container').append(newCategory);
+            categoryIndex++;
+        });
+        
+        // Add subcategory
+        $(document).on('click', '.add-subcategory', function() {
+            var catIndex = $(this).data('category-index');
+            var subContainer = $(this).siblings('.subcategories-container');
+            var subIndex = subContainer.find('.subcategory-item').length;
+            
+            var newSubcategory = '<div class="subcategory-item" style="border: 1px solid #ccc; padding: 15px; margin: 10px 0; background: white;">' +
+                '<h5>Subcategory ' + (subIndex + 1) + '</h5>' +
+                '<p><label><strong>Title:</strong><br>' +
+                '<input type="text" name="homepage_categories[' + catIndex + '][subcategories][' + subIndex + '][title]" value="" style="width: 100%;" /></label></p>' +
+                '<p><label><strong>Title Link URL:</strong><br>' +
+                '<input type="url" name="homepage_categories[' + catIndex + '][subcategories][' + subIndex + '][title_link]" value="" style="width: 100%;" placeholder="https://example.com/category" /></label></p>' +
+                '<p><label><strong>Items (format: "Item Name|URL" one per line):</strong><br>' +
+                '<small>Example: Cotton Fabric|https://example.com/cotton<br>Linen|https://example.com/linen</small><br>' +
+                '<textarea name="homepage_categories[' + catIndex + '][subcategories][' + subIndex + '][items]" style="width: 100%; height: 120px;"></textarea></label></p>' +
+                '<button type="button" class="button remove-subcategory" onclick="this.closest(\'.subcategory-item\').remove();">Remove Subcategory</button>' +
+                '</div>';
+            
+            subContainer.append(newSubcategory);
+        });
+    });
+    </script>
+    
+    <style>
+    .category-item {
+        border-radius: 5px;
+    }
+    .subcategory-item {
+        border-radius: 3px;
+    }
+    .remove-category {
+        background: #dc3545 !important;
+        border-color: #dc3545 !important;
+    }
+    </style>
+    <?php
+}
+
+// Process and sanitize category data before saving
+function victoria_style_process_categories($input) {
+    $processed = array();
+    
+    if (is_array($input)) {
+        foreach ($input as $category) {
+            if (!empty($category['name'])) {
+                $processed_category = array(
+                    'name' => sanitize_text_field($category['name']),
+                    'icon' => sanitize_text_field($category['icon']),
+                    'slug' => sanitize_title($category['slug']),
+                    'link' => esc_url_raw($category['link']),
+                    'subcategories' => array()
+                );
+                
+                if (!empty($category['subcategories'])) {
+                    foreach ($category['subcategories'] as $subcategory) {
+                        if (!empty($subcategory['title'])) {
+                            $items = array();
+                            if (!empty($subcategory['items'])) {
+                                if (is_string($subcategory['items'])) {
+                                    // Convert textarea input to array with name|url format
+                                    $lines = array_filter(array_map('trim', explode("\n", $subcategory['items'])));
+                                    foreach ($lines as $line) {
+                                        if (strpos($line, '|') !== false) {
+                                            list($name, $url) = explode('|', $line, 2);
+                                            $items[] = array(
+                                                'name' => sanitize_text_field(trim($name)),
+                                                'url' => esc_url_raw(trim($url))
+                                            );
+                                        } else {
+                                            $items[] = array(
+                                                'name' => sanitize_text_field(trim($line)),
+                                                'url' => '#'
+                                            );
+                                        }
+                                    }
+                                } else {
+                                    $items = $subcategory['items'];
+                                }
+                            }
+                            
+                            $processed_category['subcategories'][] = array(
+                                'title' => sanitize_text_field($subcategory['title']),
+                                'title_link' => esc_url_raw($subcategory['title_link']),
+                                'items' => $items
+                            );
+                        }
+                    }
+                }
+                
+                $processed[] = $processed_category;
+            }
+        }
+    }
+    
+    return $processed;
+}
+
+// Hook to process categories before saving
+add_filter('pre_update_option_homepage_categories', 'victoria_style_process_categories');
+
+// Ensure oEmbed functionality works properly
+function victoria_style_enable_oembed() {
+    // Enable oEmbed discovery
+    add_theme_support('oembed');
+    
+    // Ensure WordPress processes oEmbeds in content
+    add_filter('the_content', array($GLOBALS['wp_embed'], 'autoembed'), 8);
+}
+add_action('after_setup_theme', 'victoria_style_enable_oembed');
+
+// Fix oEmbed for custom content areas
+function victoria_style_process_content_embeds($content) {
+    global $wp_embed;
+    return $wp_embed->autoembed($content);
+}
+
+// Custom content function that properly handles embeds
+function victoria_style_the_content() {
+    $content = get_the_content();
+    $content = apply_filters('the_content', $content);
+    $content = str_replace(']]>', ']]&gt;', $content);
+    echo $content;
+}
+
+// Ensure oEmbed works in all contexts
+function victoria_style_fix_oembed() {
+    // Re-add oEmbed filters if they're missing
+    if (!has_filter('the_content', array($GLOBALS['wp_embed'], 'autoembed'))) {
+        add_filter('the_content', array($GLOBALS['wp_embed'], 'autoembed'), 8);
+    }
+    
+    // Ensure oEmbed is enabled for the content
+    add_filter('the_content', 'do_shortcode', 11); // After oEmbed
+    
+    // Fix for Ultimate Product Catalog or other plugins
+    add_filter('widget_text', array($GLOBALS['wp_embed'], 'autoembed'));
+    add_filter('the_excerpt', array($GLOBALS['wp_embed'], 'autoembed'));
+}
+add_action('init', 'victoria_style_fix_oembed');
+
+// Specifically handle YouTube embeds
+function victoria_style_youtube_embed_fix($content) {
+    // Pattern to match YouTube URLs
+    $youtube_pattern = '/(?:https?:\/\/)?(?:www\.)?(?:youtube\.com\/(?:[^\/\n\s]+\/\S+\/|(?:v|e(?:mbed)?)\/|\S*?[?&]v=)|youtu\.be\/)([a-zA-Z0-9_-]{11})/';
+    
+    // Replace YouTube URLs with proper embed code
+    $content = preg_replace_callback($youtube_pattern, function($matches) {
+        $video_id = $matches[1];
+        return '<iframe width="560" height="315" src="https://www.youtube.com/embed/' . $video_id . '" frameborder="0" allowfullscreen></iframe>';
+    }, $content);
+    
+    return $content;
+}
+add_filter('the_content', 'victoria_style_youtube_embed_fix', 9); // Before WordPress oEmbed
+
+// Debug function to check if oEmbed is working
+function victoria_style_debug_oembed() {
+    if (current_user_can('manage_options') && isset($_GET['debug_oembed'])) {
+        global $wp_embed;
+        echo '<div style="background: #f0f0f0; padding: 10px; margin: 10px; border: 1px solid #ccc;">';
+        echo '<strong>oEmbed Debug Info:</strong><br>';
+        echo 'WP_Embed object exists: ' . (isset($wp_embed) ? 'Yes' : 'No') . '<br>';
+        echo 'oEmbed autoembed filter active: ' . (has_filter('the_content', array($GLOBALS['wp_embed'], 'autoembed')) ? 'Yes' : 'No') . '<br>';
+        echo 'oEmbed providers: ' . count(wp_oembed_get_providers()) . ' registered<br>';
+        echo '</div>';
+    }
+}
+add_action('wp_head', 'victoria_style_debug_oembed'); 

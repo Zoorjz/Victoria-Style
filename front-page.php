@@ -7,21 +7,25 @@
             <div class="col-auto">
                 <div class="category-sidebar">
                     <div class="list-group list-group-flush">
-                        <a href="#" class="list-group-item list-group-item-action category-item" data-category="sewing-machines">
-                            <i class="fas fa-sewing-machine me-2"></i>Sewing Machines
+                        <?php
+                        $homepage_categories = get_option('homepage_categories', array());
+                        
+                        // Default categories if none exist
+                        if (empty($homepage_categories)) {
+                            $homepage_categories = array(
+                                array('name' => 'Sewing Machines', 'icon' => 'fas fa-sewing-machine', 'slug' => 'sewing-machines', 'link' => '#?categories=13'),
+                                array('name' => 'Fabrics', 'icon' => 'fas fa-tshirt', 'slug' => 'fabrics', 'link' => '#'),
+                                array('name' => 'Accessories', 'icon' => 'fas fa-tools', 'slug' => 'accessories', 'link' => '#'),
+                                array('name' => 'Patterns', 'icon' => 'fas fa-cut', 'slug' => 'patterns', 'link' => '#')
+                            );
+                        }
+                        
+                        foreach ($homepage_categories as $category) :
+                        ?>
+                        <a href="<?php echo esc_url(!empty($category['link']) ? $category['link'] : '#'); ?>" class="list-group-item list-group-item-action category-item" data-category="<?php echo esc_attr($category['slug']); ?>">
+                            <i class="<?php echo esc_attr($category['icon']); ?> me-2"></i><?php echo esc_html($category['name']); ?>
                         </a>
-                        <a href="#" class="list-group-item list-group-item-action category-item" data-category="fabrics">
-                            <i class="fas fa-tshirt me-2"></i>Fabrics
-                        </a>
-                        <a href="#" class="list-group-item list-group-item-action category-item" data-category="accessories">
-                            <i class="fas fa-tools me-2"></i>Accessories
-                        </a>
-                        <a href="#" class="list-group-item list-group-item-action category-item" data-category="patterns">
-                            <i class="fas fa-cut me-2"></i>Patterns
-                        </a>
-                        <a href="#" class="list-group-item list-group-item-action category-item" data-category="notions">
-                            <i class="fas fa-th me-2"></i>Notions
-                        </a>
+                        <?php endforeach; ?>
                     </div>
                 </div>
             </div>
@@ -101,62 +105,101 @@
             <div class="mega-panel">
                 <div class="container-lg">
                     <div class="mega-panel-content">
-                        <!-- Sewing Machines Panel -->
-                        <div class="mega-panel-section" data-category="sewing-machines">
+                        <?php
+                        // Default mega panel data for fallback
+                        $default_mega_panels = array(
+                            'sewing-machines' => array(
+                                array(
+                                    'title' => 'Home Sewing Machines', 
+                                    'title_link' => '#',
+                                    'items' => array(
+                                        array('name' => 'VERITAS', 'url' => '#'),
+                                        array('name' => 'Brother', 'url' => '#'),
+                                        array('name' => 'Janome', 'url' => '#'),
+                                        array('name' => 'JAPSEW', 'url' => '#')
+                                    )
+                                ),
+                                array(
+                                    'title' => 'Industrial Machines', 
+                                    'title_link' => '#',
+                                    'items' => array(
+                                        array('name' => 'Heavy Duty Machines', 'url' => '#'),
+                                        array('name' => 'Overlock Machines', 'url' => '#'),
+                                        array('name' => 'Cover Stitch Machines', 'url' => '#'),
+                                        array('name' => 'Specialty Machines', 'url' => '#')
+                                    )
+                                ),
+                                array(
+                                    'title' => 'Accessories', 
+                                    'title_link' => '#',
+                                    'items' => array(
+                                        array('name' => 'Presser Feet', 'url' => '#'),
+                                        array('name' => 'Needles', 'url' => '#'),
+                                        array('name' => 'Maintenance Kits', 'url' => '#'),
+                                        array('name' => 'Machine Parts', 'url' => '#')
+                                    )
+                                )
+                            ),
+                            'fabrics' => array(
+                                array(
+                                    'title' => 'Natural Fabrics', 
+                                    'title_link' => '#',
+                                    'items' => array(
+                                        array('name' => 'Cotton', 'url' => '#'),
+                                        array('name' => 'Linen', 'url' => '#'),
+                                        array('name' => 'Wool', 'url' => '#'),
+                                        array('name' => 'Silk', 'url' => '#')
+                                    )
+                                ),
+                                array(
+                                    'title' => 'Synthetic Fabrics', 
+                                    'title_link' => '#',
+                                    'items' => array(
+                                        array('name' => 'Polyester', 'url' => '#'),
+                                        array('name' => 'Nylon', 'url' => '#'),
+                                        array('name' => 'Rayon', 'url' => '#'),
+                                        array('name' => 'Spandex', 'url' => '#')
+                                    )
+                                )
+                            )
+                        );
+                        
+                        // Generate mega panel sections dynamically
+                        foreach ($homepage_categories as $category) :
+                            $category_slug = $category['slug'];
+                            $subcategories = !empty($category['subcategories']) ? $category['subcategories'] : 
+                                            (isset($default_mega_panels[$category_slug]) ? $default_mega_panels[$category_slug] : array());
+                            
+                            if (!empty($subcategories)) :
+                        ?>
+                        <div class="mega-panel-section" data-category="<?php echo esc_attr($category_slug); ?>">
                             <div class="row">
+                                <?php foreach ($subcategories as $subcategory) : ?>
                                 <div class="col-md-4">
-                                    <h4>Domestic Machines</h4>
+                                    <?php if (!empty($subcategory['title_link']) && $subcategory['title_link'] !== '#') : ?>
+                                        <h4><a href="<?php echo esc_url($subcategory['title_link']); ?>"><?php echo esc_html($subcategory['title']); ?></a></h4>
+                                    <?php else : ?>
+                                        <h4><?php echo esc_html($subcategory['title']); ?></h4>
+                                    <?php endif; ?>
                                     <ul class="list-unstyled">
-                                        <li><a href="#">Basic Sewing Machines</a></li>
-                                        <li><a href="#">Computerized Machines</a></li>
-                                        <li><a href="#">Embroidery Machines</a></li>
-                                        <li><a href="#">Quilting Machines</a></li>
+                                        <?php foreach ($subcategory['items'] as $item) : ?>
+                                        <li>
+                                            <?php if (is_array($item)) : ?>
+                                                <a href="<?php echo esc_url($item['url']); ?>"><?php echo esc_html($item['name']); ?></a>
+                                            <?php else : ?>
+                                                <a href="#"><?php echo esc_html($item); ?></a>
+                                            <?php endif; ?>
+                                        </li>
+                                        <?php endforeach; ?>
                                     </ul>
                                 </div>
-                                <div class="col-md-4">
-                                    <h4>Industrial Machines</h4>
-                                    <ul class="list-unstyled">
-                                        <li><a href="#">Heavy Duty Machines</a></li>
-                                        <li><a href="#">Overlock Machines</a></li>
-                                        <li><a href="#">Cover Stitch Machines</a></li>
-                                        <li><a href="#">Specialty Machines</a></li>
-                                    </ul>
-                                </div>
-                                <div class="col-md-4">
-                                    <h4>Accessories</h4>
-                                    <ul class="list-unstyled">
-                                        <li><a href="#">Presser Feet</a></li>
-                                        <li><a href="#">Needles</a></li>
-                                        <li><a href="#">Maintenance Kits</a></li>
-                                        <li><a href="#">Machine Parts</a></li>
-                                    </ul>
-                                </div>
+                                <?php endforeach; ?>
                             </div>
                         </div>
-
-                        <!-- Fabrics Panel -->
-                        <div class="mega-panel-section" data-category="fabrics">
-                            <div class="row">
-                                <div class="col-md-4">
-                                    <h4>Natural Fabrics</h4>
-                                    <ul class="list-unstyled">
-                                        <li><a href="#">Cotton</a></li>
-                                        <li><a href="#">Linen</a></li>
-                                        <li><a href="#">Wool</a></li>
-                                        <li><a href="#">Silk</a></li>
-                                    </ul>
-                                </div>
-                                <div class="col-md-4">
-                                    <h4>Synthetic Fabrics</h4>
-                                    <ul class="list-unstyled">
-                                        <li><a href="#">Polyester</a></li>
-                                        <li><a href="#">Nylon</a></li>
-                                        <li><a href="#">Rayon</a></li>
-                                        <li><a href="#">Spandex</a></li>
-                                    </ul>
-                                </div>
-                            </div>
-                        </div>
+                        <?php
+                            endif;
+                        endforeach;
+                        ?>
                     </div>
                 </div>
             </div>
