@@ -13,17 +13,17 @@
                         // Default categories if none exist
                         if (empty($homepage_categories)) {
                             $homepage_categories = array(
-                                array('name' => 'Sewing Machines', 'icon' => 'fas fa-sewing-machine', 'slug' => 'sewing-machines', 'link' => '#?categories=13'),
-                                array('name' => 'Fabrics', 'icon' => 'fas fa-tshirt', 'slug' => 'fabrics', 'link' => '#'),
-                                array('name' => 'Accessories', 'icon' => 'fas fa-tools', 'slug' => 'accessories', 'link' => '#'),
-                                array('name' => 'Patterns', 'icon' => 'fas fa-cut', 'slug' => 'patterns', 'link' => '#')
+                                array('name' => '<ru_>Швейные машины<ru_><ka_>საკერავი მანქანები<ka_><eng_>Sewing Machines<eng_>', 'icon' => 'fas fa-sewing-machine', 'slug' => 'sewing-machines', 'link' => '#?categories=13'),
+                                array('name' => '<ru_>Ткани<ru_><ka_>ქსოვილები<ka_><eng_>Fabrics<eng_>', 'icon' => 'fas fa-tshirt', 'slug' => 'fabrics', 'link' => '#'),
+                                array('name' => '<ru_>Аксессуары<ru_><ka_>აქსესუარები<ka_><eng_>Accessories<eng_>', 'icon' => 'fas fa-tools', 'slug' => 'accessories', 'link' => '#'),
+                                array('name' => '<ru_>Выкройки<ru_><ka_>ნიმუშები<ka_><eng_>Patterns<eng_>', 'icon' => 'fas fa-cut', 'slug' => 'patterns', 'link' => '#')
                             );
                         }
                         
                         foreach ($homepage_categories as $category) :
                         ?>
-                        <a href="<?php echo esc_url(!empty($category['link']) ? $category['link'] : '#'); ?>" class="list-group-item list-group-item-action category-item" data-category="<?php echo esc_attr($category['slug']); ?>">
-                            <i class="<?php echo esc_attr($category['icon']); ?> me-2"></i><?php echo esc_html($category['name']); ?>
+                        <a href="<?php echo esc_url(!empty($category['link']) ? $category['link'] : '#'); ?>" class="list-group-item list-group-item-action category-item" data-category="<?php echo esc_attr($category['slug']); ?>" data-original-text="<?php echo esc_attr($category['name']); ?>">
+                            <i class="<?php echo esc_attr($category['icon']); ?> me-2"></i><?php echo esc_html(victoria_style_display_multilang($category['name'])); ?>
                         </a>
                         <?php endforeach; ?>
                     </div>
@@ -45,14 +45,14 @@
                 if (empty($carousel_slides)) {
                     $carousel_slides = array(
                         array(
-                            'title' => 'Sewing Machines',
-                            'description' => 'Discover our range of sewing machines for all skill levels.',
+                            'title' => '<ru_>Швейные машины<ru_><ka_>საკერავი მანქანები<ka_><eng_>Sewing Machines<eng_>',
+                            'description' => '<ru_>Откройте наш ассортимент швейных машин для всех уровней навыков<ru_><ka_>აღმოაჩინეთ ჩვენი საკერავი მანქანების ასორტიმენტი ყველა უნარის დონისთვის<ka_><eng_>Discover our range of sewing machines for all skill levels<eng_>',
                             'link' => '#',
                             'image' => get_template_directory_uri() . '/assets/images/img1.png'
                         ),
                         array(
-                            'title' => 'Fabrics',
-                            'description' => 'Explore a variety of fabrics for your next project.',
+                            'title' => '<ru_>Ткани<ru_><ka_>ქსოვილები<ka_><eng_>Fabrics<eng_>',
+                            'description' => '<ru_>Изучите разнообразие тканей для вашего следующего проекта<ru_><ka_>შეისწავლეთ ქსოვილების მრავალფეროვნება თქვენი შემდეგი პროექტისთვის<ka_><eng_>Explore a variety of fabrics for your next project<eng_>',
                             'link' => '#',
                             'image' => get_template_directory_uri() . '/assets/images/img2.png'
                         )
@@ -77,10 +77,10 @@
                                 <?php if (!empty($slide['title']) || !empty($slide['description'])) : ?>
                                 <div class="carousel-caption d-none d-md-block">
                                     <?php if (!empty($slide['title'])) : ?>
-                                    <h5><?php echo esc_html($slide['title']); ?></h5>
+                                    <h5 data-original-text="<?php echo esc_attr($slide['title']); ?>"><?php echo esc_html(victoria_style_display_multilang($slide['title'])); ?></h5>
                                     <?php endif; ?>
                                     <?php if (!empty($slide['description'])) : ?>
-                                    <p><?php echo esc_html($slide['description']); ?></p>
+                                    <p data-original-text="<?php echo esc_attr($slide['description']); ?>"><?php echo esc_html(victoria_style_display_multilang($slide['description'])); ?></p>
                                     <?php endif; ?>
                                 </div>
                                 <?php endif; ?>
@@ -177,9 +177,9 @@
                                 <?php foreach ($subcategories as $subcategory) : ?>
                                 <div class="col-md-4">
                                     <?php if (!empty($subcategory['title_link']) && $subcategory['title_link'] !== '#') : ?>
-                                        <h4><a href="<?php echo esc_url($subcategory['title_link']); ?>"><?php echo esc_html($subcategory['title']); ?></a></h4>
+                                        <h4><a href="<?php echo esc_url($subcategory['title_link']); ?>" data-original-text="<?php echo esc_attr($subcategory['title']); ?>"><?php echo esc_html(victoria_style_display_multilang($subcategory['title'])); ?></a></h4>
                                     <?php else : ?>
-                                        <h4><?php echo esc_html($subcategory['title']); ?></h4>
+                                        <h4 data-original-text="<?php echo esc_attr($subcategory['title']); ?>"><?php echo esc_html(victoria_style_display_multilang($subcategory['title'])); ?></h4>
                                     <?php endif; ?>
                                     <ul class="list-unstyled">
                                         <?php foreach ($subcategory['items'] as $item) : ?>

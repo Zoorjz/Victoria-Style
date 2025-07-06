@@ -137,10 +137,12 @@ function victoria_style_carousel_slides_callback() {
         echo '<h4>Slide ' . ($index + 1) . '</h4>';
         
         echo '<p><label><strong>Title:</strong><br>';
-        echo '<input type="text" name="carousel_slides[' . $index . '][title]" value="' . esc_attr($slide['title']) . '" style="width: 100%;" /></label></p>';
+        victoria_style_multilang_input_field('carousel_slides[' . $index . '][title]', $slide['title'], '<ru_>Швейные машины<ru_><ka_>საკერავი მანქანები<ka_><eng_>Sewing Machines<eng_>');
+        echo '</label></p>';
         
         echo '<p><label><strong>Description:</strong><br>';
-        echo '<textarea name="carousel_slides[' . $index . '][description]" style="width: 100%; height: 60px;">' . esc_textarea($slide['description']) . '</textarea></label></p>';
+        victoria_style_multilang_input_field('carousel_slides[' . $index . '][description]', $slide['description'], '<ru_>Откройте наш ассортимент швейных машин<ru_><ka_>აღმოაჩინეთ ჩვენი საკერავი მანქანების ასორტიმენტი<ka_><eng_>Discover our range of sewing machines<eng_>', 'textarea');
+        echo '</label></p>';
         
         echo '<p><label><strong>Link URL:</strong><br>';
         echo '<input type="url" name="carousel_slides[' . $index . '][link]" value="' . esc_attr($slide['link']) . '" style="width: 100%;" placeholder="https://example.com" /></label></p>';
@@ -217,9 +219,11 @@ function victoria_style_carousel_settings_page() {
             var newSlide = '<div class="carousel-slide-item" style="border: 1px solid #ddd; padding: 15px; margin: 10px 0; background: #f9f9f9;">' +
                 '<h4>Slide ' + (slideCount + 1) + '</h4>' +
                 '<p><label><strong>Title:</strong><br>' +
-                '<input type="text" name="carousel_slides[' + slideCount + '][title]" value="" style="width: 100%;" /></label></p>' +
+                '<div class="multilang-input-container"><input type="text" name="carousel_slides[' + slideCount + '][title]" value="" style="width: 100%;" placeholder="<ru_>Швейные машины<ru_><ka_>საკერავი მანქანები<ka_><eng_>Sewing Machines<eng_>" />' +
+                '<small style="color: #666; display: block; margin-top: 5px;">Format: &lt;ru_&gt;Russian text&lt;ru_&gt;&lt;ka_&gt;Georgian text&lt;ka_&gt;&lt;eng_&gt;English text&lt;eng_&gt;</small></div></label></p>' +
                 '<p><label><strong>Description:</strong><br>' +
-                '<textarea name="carousel_slides[' + slideCount + '][description]" style="width: 100%; height: 60px;"></textarea></label></p>' +
+                '<div class="multilang-input-container"><textarea name="carousel_slides[' + slideCount + '][description]" style="width: 100%; height: 80px;" placeholder="<ru_>Откройте наш ассортимент швейных машин<ru_><ka_>აღმოაჩინეთ ჩვენი საკერავი მანქანების ასორტიმენტი<ka_><eng_>Discover our range of sewing machines<eng_>"></textarea>' +
+                '<small style="color: #666; display: block; margin-top: 5px;">Format: &lt;ru_&gt;Russian text&lt;ru_&gt;&lt;ka_&gt;Georgian text&lt;ka_&gt;&lt;eng_&gt;English text&lt;eng_&gt;</small></div></label></p>' +
                 '<p><label><strong>Link URL:</strong><br>' +
                 '<input type="url" name="carousel_slides[' + slideCount + '][link]" value="" style="width: 100%;" placeholder="https://example.com" /></label></p>' +
                 '<p><label><strong>Image URL:</strong><br>' +
@@ -354,7 +358,7 @@ function victoria_style_category_settings_page() {
                         <table class="form-table">
                             <tr>
                                 <th><label>Category Name:</label></th>
-                                <td><input type="text" name="homepage_categories[<?php echo $index; ?>][name]" value="<?php echo esc_attr($category['name']); ?>" style="width: 300px;" /></td>
+                                <td><?php victoria_style_multilang_input_field('homepage_categories[' . $index . '][name]', $category['name'], '<ru_>Швейные машины<ru_><ka_>საკერავი მანქანები<ka_><eng_>Sewing Machines<eng_>'); ?></td>
                             </tr>
                             <tr>
                                 <th><label>Icon Class:</label></th>
@@ -378,7 +382,7 @@ function victoria_style_category_settings_page() {
                                         <h5>Subcategory <?php echo ($sub_index + 1); ?></h5>
                                         
                                         <p><label><strong>Title:</strong><br>
-                                        <input type="text" name="homepage_categories[<?php echo $index; ?>][subcategories][<?php echo $sub_index; ?>][title]" value="<?php echo esc_attr($subcategory['title']); ?>" style="width: 100%;" /></label></p>
+                                        <?php victoria_style_multilang_input_field('homepage_categories[' . $index . '][subcategories][' . $sub_index . '][title]', $subcategory['title'], '<ru_>Домашние швейные машины<ru_><ka_>საოჯახო საკერავი მანქანები<ka_><eng_>Home Sewing Machines<eng_>'); ?></label></p>
                                         
                                         <p><label><strong>Title Link URL:</strong><br>
                                         <input type="url" name="homepage_categories[<?php echo $index; ?>][subcategories][<?php echo $sub_index; ?>][title_link]" value="<?php echo esc_attr(isset($subcategory['title_link']) ? $subcategory['title_link'] : ''); ?>" style="width: 100%;" placeholder="https://example.com/category" /></label></p>
@@ -487,7 +491,7 @@ function victoria_style_process_categories($input) {
         foreach ($input as $category) {
             if (!empty($category['name'])) {
                 $processed_category = array(
-                    'name' => sanitize_text_field($category['name']),
+                    'name' => victoria_style_sanitize_multilang_text($category['name']),
                     'icon' => sanitize_text_field($category['icon']),
                     'slug' => sanitize_title($category['slug']),
                     'link' => esc_url_raw($category['link']),
@@ -506,12 +510,12 @@ function victoria_style_process_categories($input) {
                                         if (strpos($line, '|') !== false) {
                                             list($name, $url) = explode('|', $line, 2);
                                             $items[] = array(
-                                                'name' => sanitize_text_field(trim($name)),
+                                                'name' => victoria_style_sanitize_multilang_text(trim($name)),
                                                 'url' => esc_url_raw(trim($url))
                                             );
                                         } else {
                                             $items[] = array(
-                                                'name' => sanitize_text_field(trim($line)),
+                                                'name' => victoria_style_sanitize_multilang_text(trim($line)),
                                                 'url' => '#'
                                             );
                                         }
@@ -522,7 +526,7 @@ function victoria_style_process_categories($input) {
                             }
                             
                             $processed_category['subcategories'][] = array(
-                                'title' => sanitize_text_field($subcategory['title']),
+                                'title' => victoria_style_sanitize_multilang_text($subcategory['title']),
                                 'title_link' => esc_url_raw($subcategory['title_link']),
                                 'items' => $items
                             );
@@ -540,6 +544,29 @@ function victoria_style_process_categories($input) {
 
 // Hook to process categories before saving
 add_filter('pre_update_option_homepage_categories', 'victoria_style_process_categories');
+
+// Process and sanitize carousel data before saving
+function victoria_style_process_carousel($input) {
+    $processed = array();
+    
+    if (is_array($input)) {
+        foreach ($input as $slide) {
+            if (!empty($slide['title']) || !empty($slide['image'])) {
+                $processed[] = array(
+                    'title' => victoria_style_sanitize_multilang_text($slide['title']),
+                    'description' => victoria_style_sanitize_multilang_text($slide['description']),
+                    'link' => esc_url_raw($slide['link']),
+                    'image' => esc_url_raw($slide['image'])
+                );
+            }
+        }
+    }
+    
+    return $processed;
+}
+
+// Hook to process carousel slides before saving
+add_filter('pre_update_option_carousel_slides', 'victoria_style_process_carousel');
 
 // Ensure oEmbed functionality works properly
 function victoria_style_enable_oembed() {
@@ -642,7 +669,8 @@ function victoria_style_secondary_navigation_callback() {
         echo '<h5>Menu Item ' . ($index + 1) . '</h5>';
         
         echo '<p><label><strong>Title:</strong><br>';
-        echo '<input type="text" name="custom_secondary_navigation_items[' . $index . '][title]" value="' . esc_attr($item['title']) . '" style="width: 300px;" /></label></p>';
+        victoria_style_multilang_input_field('custom_secondary_navigation_items[' . $index . '][title]', $item['title'], '<ru_>О нас<ru_><ka_>ჩვენს შესახებ<ka_><eng_>About<eng_>');
+        echo '</label></p>';
         
         echo '<p><label><strong>URL:</strong><br>';
         echo '<input type="url" name="custom_secondary_navigation_items[' . $index . '][url]" value="' . esc_attr($item['url']) . '" style="width: 300px;" placeholder="https://example.com" /></label></p>';
@@ -685,7 +713,9 @@ function victoria_style_navigation_settings_page() {
             var newItem = '<div class="nav-item-container" style="border: 1px solid #ddd; padding: 15px; margin: 10px 0; background: #f9f9f9;">' +
                 '<h5>Menu Item ' + (itemCount + 1) + '</h5>' +
                 '<p><label><strong>Title:</strong><br>' +
-                '<input type="text" name="custom_secondary_navigation_items[' + itemCount + '][title]" value="" style="width: 300px;" /></label></p>' +
+                '<div class="multilang-input-container"><input type="text" name="custom_secondary_navigation_items[' + itemCount + '][title]" value="" style="width: 100%;" placeholder="<ru_>О нас<ru_><ka_>ჩვენს შესახებ<ka_><eng_>About<eng_>" />' +
+                '<small style="color: #666; display: block; margin-top: 5px;"><strong>Multi-language format:</strong> &lt;ru_&gt;Russian text&lt;ru_&gt;&lt;ka_&gt;Georgian text&lt;ka_&gt;&lt;eng_&gt;English text&lt;eng_&gt;</small>' +
+                '<small style="color: #0073aa; display: block; margin-top: 2px;"><strong>Example:</strong> &lt;ru_&gt;О нас&lt;ru_&gt;&lt;ka_&gt;ჩვენს შესახებ&lt;ka_&gt;&lt;eng_&gt;About&lt;eng_&gt;</small></div></label></p>' +
                 '<p><label><strong>URL:</strong><br>' +
                 '<input type="url" name="custom_secondary_navigation_items[' + itemCount + '][url]" value="" style="width: 300px;" placeholder="https://example.com" /></label></p>' +
                 '<p><label><strong>Target:</strong><br>' +
@@ -697,6 +727,13 @@ function victoria_style_navigation_settings_page() {
                 '</div>';
             
             container.append(newItem);
+        });
+        
+        // Add helper functionality for multilang format
+        $(document).on('focus', '.multilang-input-container input, .multilang-input-container textarea', function() {
+            if ($(this).val() === '') {
+                $(this).attr('placeholder', '<ru_>Russian text<ru_><ka_>Georgian text<ka_><eng_>English text<eng_>');
+            }
         });
     });
     </script>
@@ -714,6 +751,37 @@ function victoria_style_navigation_settings_page() {
     <?php
 }
 
+// Custom sanitization function that preserves multilang tags
+function victoria_style_sanitize_multilang_text($text) {
+    if (empty($text)) {
+        return $text;
+    }
+    
+    // First, temporarily replace multilang tags with placeholders
+    $placeholders = array();
+    $counter = 0;
+    
+    // Pattern to match multilang tags like <ru_>text<ru_>
+    $pattern = '/<(\w+)_>(.*?)<\1_>/';
+    
+    $text = preg_replace_callback($pattern, function($matches) use (&$placeholders, &$counter) {
+        $placeholder = '__MULTILANG_' . $counter . '__';
+        $placeholders[$placeholder] = '<' . $matches[1] . '_>' . $matches[2] . '<' . $matches[1] . '_>';
+        $counter++;
+        return $placeholder;
+    }, $text);
+    
+    // Now sanitize the text normally (this will remove any other HTML/script tags)
+    $text = sanitize_text_field($text);
+    
+    // Restore the multilang tags
+    foreach ($placeholders as $placeholder => $original) {
+        $text = str_replace($placeholder, $original, $text);
+    }
+    
+    return $text;
+}
+
 // Process and sanitize navigation data before saving
 function victoria_style_process_navigation($input) {
     $processed = array();
@@ -722,7 +790,7 @@ function victoria_style_process_navigation($input) {
         foreach ($input as $item) {
             if (!empty($item['title']) && !empty($item['url'])) {
                 $processed[] = array(
-                    'title' => sanitize_text_field($item['title']),
+                    'title' => victoria_style_sanitize_multilang_text($item['title']),
                     'url' => esc_url_raw($item['url']),
                     'target' => in_array($item['target'], array('_self', '_blank')) ? $item['target'] : '_self'
                 );
@@ -735,6 +803,68 @@ function victoria_style_process_navigation($input) {
 
 // Hook to process navigation items before saving
 add_filter('pre_update_option_custom_secondary_navigation_items', 'victoria_style_process_navigation');
+
+// Multi-language support functions
+function victoria_style_parse_multilang_text($text, $lang = 'rus') {
+    if (empty($text)) {
+        return $text;
+    }
+    
+    // Map language codes to proper tags
+    $lang_map = array(
+        'rus' => 'ru',
+        'geo' => 'ka',
+        'eng' => 'eng'
+    );
+    
+    $target_lang = isset($lang_map[$lang]) ? $lang_map[$lang] : $lang;
+    
+    // Pattern to match language tags like <ru_>text<ru_>
+    $pattern = '/<(' . $target_lang . ')_>(.*?)<\1_>/';
+    
+    if (preg_match($pattern, $text, $matches)) {
+        return $matches[2];
+    }
+    
+    // If specific language not found, try to extract first available language
+    $general_pattern = '/<(\w+)_>(.*?)<\1_>/';
+    if (preg_match($general_pattern, $text, $matches)) {
+        return $matches[2];
+    }
+    
+    // If no language tags found, return original text
+    return $text;
+}
+
+// Get current language from session/cookie
+function victoria_style_get_current_language() {
+    if (isset($_COOKIE['site_language'])) {
+        return sanitize_text_field($_COOKIE['site_language']);
+    }
+    return 'rus'; // Default language
+}
+
+// Display multilang text based on current language
+function victoria_style_display_multilang($text) {
+    $current_lang = victoria_style_get_current_language();
+    return victoria_style_parse_multilang_text($text, $current_lang);
+}
+
+// Helper function to create language input field
+function victoria_style_multilang_input_field($name, $value, $placeholder = '', $type = 'text') {
+    $field_id = str_replace(['[', ']'], ['_', ''], $name);
+    echo '<div class="multilang-input-container">';
+    
+    if ($type === 'textarea') {
+        echo '<textarea name="' . esc_attr($name) . '" id="' . esc_attr($field_id) . '" style="width: 100%; height: 80px;" placeholder="' . esc_attr($placeholder) . '">' . esc_textarea($value) . '</textarea>';
+    } else {
+        echo '<input type="' . esc_attr($type) . '" name="' . esc_attr($name) . '" id="' . esc_attr($field_id) . '" value="' . esc_attr($value) . '" style="width: 100%;" placeholder="' . esc_attr($placeholder) . '" />';
+    }
+    
+    echo '<small style="color: #666; display: block; margin-top: 5px;"><strong>Multi-language format:</strong> &lt;ru_&gt;Russian text&lt;ru_&gt;&lt;ka_&gt;Georgian text&lt;ka_&gt;&lt;eng_&gt;English text&lt;eng_&gt;</small>';
+    echo '<small style="color: #0073aa; display: block; margin-top: 2px;"><strong>Example:</strong> &lt;ru_&gt;О нас&lt;ru_&gt;&lt;ka_&gt;ჩვენს შესახებ&lt;ka_&gt;&lt;eng_&gt;About&lt;eng_&gt;</small>';
+    echo '</div>';
+}
 
 // Specifically handle YouTube embeds
 function victoria_style_youtube_embed_fix($content) {

@@ -48,13 +48,74 @@
                     ));
                     ?>
                     <!-- Language Switcher -->
-                    <div class="language-switcher ms-auto me-3">
+                    <div class="language-switcher ms-auto me-3" id="language-switcher">
                         <div class="btn-group" role="group" aria-label="Language switcher">
-                            <a href="#" class="btn btn-outline-secondary active" data-lang="rus">RUS</a>
-                            <a href="#" class="btn btn-outline-secondary" data-lang="geo">GEO</a>
-                            <a href="#" class="btn btn-outline-secondary" data-lang="eng">ENG</a>
+                            <?php 
+                            $current_lang = victoria_style_get_current_language();
+                            $languages = array(
+                                'rus' => 'RUS',
+                                'geo' => 'GEO', 
+                                'eng' => 'ENG'
+                            );
+                            
+                            foreach ($languages as $lang_code => $lang_label) {
+                                $active_class = ($current_lang === $lang_code) ? ' active' : '';
+                                echo '<a href="#" class="btn btn-outline-secondary language-btn' . $active_class . '" data-lang="' . esc_attr($lang_code) . '" id="lang-' . esc_attr($lang_code) . '">' . esc_html($lang_label) . '</a>';
+                            }
+                            ?>
                         </div>
                     </div>
+                    
+                    <script>
+                    // Initialize language switcher immediately
+                    document.addEventListener('DOMContentLoaded', function() {
+                        // Store current language in a global variable
+                        window.currentSiteLanguage = '<?php echo esc_js($current_lang); ?>';
+                        
+                        // Add click event listeners to language buttons
+                        const languageButtons = document.querySelectorAll('.language-switcher .language-btn');
+                        
+                        languageButtons.forEach(function(button) {
+                            button.addEventListener('click', function(e) {
+                                e.preventDefault();
+                                
+                                const selectedLang = this.getAttribute('data-lang');
+                                console.log('Language button clicked:', selectedLang);
+                                
+                                // Update active state
+                                languageButtons.forEach(btn => btn.classList.remove('active'));
+                                this.classList.add('active');
+                                
+                                // Store language preference
+                                document.cookie = 'site_language=' + selectedLang + '; path=/; max-age=' + (365 * 24 * 60 * 60);
+                                window.currentSiteLanguage = selectedLang;
+                                
+                                // Trigger custom event for language change
+                                const languageChangeEvent = new CustomEvent('languageChanged', {
+                                    detail: { language: selectedLang }
+                                });
+                                document.dispatchEvent(languageChangeEvent);
+                                
+                                // If jQuery is available, trigger the update function
+                                if (typeof jQuery !== 'undefined' && typeof updateMultilangContent === 'function') {
+                                    updateMultilangContent(selectedLang);
+                                } else {
+                                    // Fallback: reload page with language parameter
+                                    const url = new URL(window.location);
+                                    url.searchParams.set('lang', selectedLang);
+                                    window.location.href = url.toString();
+                                }
+                            });
+                        });
+                        
+                        // Initialize content with current language
+                        if (typeof jQuery !== 'undefined' && typeof updateMultilangContent === 'function') {
+                            setTimeout(function() {
+                                updateMultilangContent(window.currentSiteLanguage);
+                            }, 100);
+                        }
+                    });
+                    </script>
                 </div>
             </div>
         </nav>
@@ -70,12 +131,12 @@
                     // Default secondary navigation items if none exist
                     if (empty($custom_secondary_nav_items)) {
                         $custom_secondary_nav_items = array(
-                            array('title' => 'About', 'url' => '#', 'target' => '_self'),
-                            array('title' => 'Atelie', 'url' => '#', 'target' => '_self'),
-                            array('title' => 'Cloth', 'url' => '#', 'target' => '_self'),
-                            array('title' => 'Sewing Machines', 'url' => '#', 'target' => '_self'),
-                            array('title' => 'Blog', 'url' => '#', 'target' => '_self'),
-                            array('title' => 'Contacts', 'url' => '#', 'target' => '_self')
+                            array('title' => '<ru_>О нас<ru_><ka_>ჩვენს შესახებ<ka_><eng_>About<eng_>', 'url' => '#', 'target' => '_self'),
+                            array('title' => '<ru_>Ателье<ru_><ka_>სახელოსნო<ka_><eng_>Atelier<eng_>', 'url' => '#', 'target' => '_self'),
+                            array('title' => '<ru_>Ткани<ru_><ka_>ქსოვილები<ka_><eng_>Cloth<eng_>', 'url' => '#', 'target' => '_self'),
+                            array('title' => '<ru_>Швейные машины<ru_><ka_>საკერავი მანქანები<ka_><eng_>Sewing Machines<eng_>', 'url' => '#', 'target' => '_self'),
+                            array('title' => '<ru_>Блог<ru_><ka_>ბლოგი<ka_><eng_>Blog<eng_>', 'url' => '#', 'target' => '_self'),
+                            array('title' => '<ru_>Контакты<ru_><ka_>კონტაქტი<ka_><eng_>Contacts<eng_>', 'url' => '#', 'target' => '_self')
                         );
                     }
                     
@@ -83,7 +144,7 @@
                         echo '<ul class="navbar-nav">';
                         foreach ($custom_secondary_nav_items as $item) {
                             echo '<li class="nav-item">';
-                            echo '<a class="nav-link" href="' . esc_url($item['url']) . '" target="' . esc_attr($item['target']) . '">' . esc_html($item['title']) . '</a>';
+                            echo '<a class="nav-link" href="' . esc_url($item['url']) . '" target="' . esc_attr($item['target']) . '" data-original-text="' . esc_attr($item['title']) . '">' . esc_html(victoria_style_display_multilang($item['title'])) . '</a>';
                             echo '</li>';
                         }
                         echo '</ul>';
