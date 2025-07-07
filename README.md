@@ -29,7 +29,8 @@ A bright and elegant WordPress theme with golden accents and multilingual suppor
 - JavaScript-powered dynamic content translation
 - Cookie-based language preference storage
 - **NEW: Full Content Translation** - Use multilingual format directly in WordPress editor for posts, pages, and widgets
-- Real-time content switching without page reload
+- **Company Footer Integration** - Complete multilingual company information in footer
+- Language switching with page refresh for reliability
 - WordPress KSES-safe content processing
 
 ### Admin Management Features
