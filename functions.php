@@ -838,10 +838,17 @@ function victoria_style_parse_multilang_text($text, $lang = 'rus') {
 
 // Get current language from session/cookie
 function victoria_style_get_current_language() {
-    if (isset($_COOKIE['site_language'])) {
+    // Check URL parameter first (for testing)
+    if (isset($_GET['lang']) && in_array($_GET['lang'], array('rus', 'geo', 'eng'))) {
+        return sanitize_text_field($_GET['lang']);
+    }
+    
+    // Check cookie
+    if (isset($_COOKIE['site_language']) && in_array($_COOKIE['site_language'], array('rus', 'geo', 'eng'))) {
         return sanitize_text_field($_COOKIE['site_language']);
     }
-    return 'rus'; // Default language
+    
+    return 'eng'; // Default to English for now to match your test
 }
 
 // Display multilang text based on current language
@@ -893,4 +900,221 @@ function victoria_style_debug_oembed() {
         echo '</div>';
     }
 }
-add_action('wp_head', 'victoria_style_debug_oembed'); 
+add_action('wp_head', 'victoria_style_debug_oembed');
+
+// Multilingual Content Support
+// ============================
+
+/**
+ * Sanitize multilingual content while preserving multilang tags
+ * This function runs BEFORE WordPress KSES to protect multilang tags from being stripped
+ */
+function victoria_style_sanitize_multilang_content($content) {
+    if (empty($content)) {
+        return $content;
+    }
+    
+    // First, temporarily replace multilang tags with placeholders to protect them from KSES
+    $placeholders = array();
+    $counter = 0;
+    
+    // Pattern to match multilang tags like <ru_>text<ru_>
+    $pattern = '/<(\w+)_>(.*?)<\1_>/s';
+    
+    $content = preg_replace_callback($pattern, function($matches) use (&$placeholders, &$counter) {
+        $placeholder = '__MULTILANG_PLACEHOLDER_' . $counter . '__';
+        $placeholders[$placeholder] = '<' . $matches[1] . '_>' . $matches[2] . '<' . $matches[1] . '_>';
+        $counter++;
+        return $placeholder;
+    }, $content);
+    
+    // Store placeholders in a global variable so we can restore them after KSES
+    global $victoria_style_multilang_placeholders;
+    $victoria_style_multilang_placeholders = $placeholders;
+    
+    return $content;
+}
+
+/**
+ * Restore multilang tags after WordPress KSES has run
+ */
+function victoria_style_restore_multilang_content($content) {
+    global $victoria_style_multilang_placeholders;
+    
+    if (!empty($victoria_style_multilang_placeholders)) {
+        // Restore the multilang tags
+        foreach ($victoria_style_multilang_placeholders as $placeholder => $original) {
+            $content = str_replace($placeholder, $original, $content);
+        }
+        
+        // Clear the global variable
+        $victoria_style_multilang_placeholders = array();
+    }
+    
+    return $content;
+}
+
+/**
+ * Display content with appropriate language based on current language setting
+ */
+function victoria_style_filter_multilang_content($content) {
+    if (empty($content)) {
+        return $content;
+    }
+    
+    // Get current language
+    $current_lang = victoria_style_get_current_language();
+    
+    // If we're in admin, show all languages (for editing)
+    if (is_admin() && !wp_doing_ajax()) {
+        return $content;
+    }
+    
+    // Debug logging (remove in production)
+    if (defined('WP_DEBUG') && WP_DEBUG) {
+        error_log('Filtering content for language: ' . $current_lang);
+        error_log('Content before filtering: ' . substr($content, 0, 200));
+    }
+    
+    // Map language codes
+    $lang_map = array(
+        'rus' => 'ru',
+        'geo' => 'ka', 
+        'eng' => 'eng'
+    );
+    
+    $target_lang = isset($lang_map[$current_lang]) ? $lang_map[$current_lang] : $current_lang;
+    
+    // Store original content for fallback
+    $original_content = $content;
+    $has_multilang = false;
+    
+    // Handle both HTML-encoded and normal multilang tags
+    // First, handle HTML-encoded tags like &lt;ru_&gt;text&lt;ru_&gt;
+    $content = preg_replace_callback('/&lt;(\w+)_&gt;(.*?)&lt;\1_&gt;/s', function($matches) use ($target_lang, &$has_multilang) {
+        $has_multilang = true;
+        $lang_code = $matches[1];
+        $text = $matches[2];
+        
+        // Return text if it matches current language, otherwise return empty
+        return ($lang_code === $target_lang) ? $text : '';
+    }, $content);
+    
+    // Then handle normal tags like <ru_>text<ru_>
+    $content = preg_replace_callback('/<(\w+)_>(.*?)<\1_>/s', function($matches) use ($target_lang, &$has_multilang) {
+        $has_multilang = true;
+        $lang_code = $matches[1];
+        $text = $matches[2];
+        
+        // Return text if it matches current language, otherwise return empty
+        return ($lang_code === $target_lang) ? $text : '';
+    }, $content);
+    
+    // Clean up any leftover empty spaces or line breaks
+    if ($has_multilang) {
+        $content = preg_replace('/\n\s*\n/', "\n", $content);
+        $content = trim($content);
+        
+        // Debug logging (remove in production)
+        if (defined('WP_DEBUG') && WP_DEBUG) {
+            error_log('Content after filtering: ' . substr($content, 0, 200));
+        }
+    }
+    
+    return $content;
+}
+
+/**
+ * Add data attributes to content elements for JavaScript translation
+ */
+function victoria_style_add_multilang_attributes($content) {
+    if (empty($content) || is_admin()) {
+        return $content;
+    }
+    
+    // Store original content with multilang tags in data attribute
+    $original_content = $content;
+    
+    // Find multilang content and wrap it with data attributes
+    $content = preg_replace_callback('/(<[^>]*>)*([^<]*<\w+_>.*?<\/\w+_>[^<]*)/s', function($matches) {
+        $full_match = $matches[0];
+        
+        // Check if this contains multilang tags
+        if (preg_match('/<\w+_>.*?<\/\w+_>/', $full_match)) {
+            // Wrap with span that has data attribute for JS processing
+            return '<span class="multilang-content" data-original-content="' . esc_attr($full_match) . '">' . $full_match . '</span>';
+        }
+        
+        return $full_match;
+    }, $content);
+    
+    return $content;
+}
+
+// Hook into content processing at different stages
+add_filter('content_save_pre', 'victoria_style_sanitize_multilang_content', 9); // Before KSES
+add_filter('content_save_pre', 'victoria_style_restore_multilang_content', 11); // After KSES
+
+// Filter content display on frontend
+add_filter('the_content', 'victoria_style_filter_multilang_content', 1); // Very early
+add_filter('the_content', 'victoria_style_filter_multilang_content', 50); // Middle priority  
+add_filter('the_content', 'victoria_style_filter_multilang_content', 999); // Very late, after all other filters
+add_filter('the_excerpt', 'victoria_style_filter_multilang_content', 5);
+add_filter('widget_text', 'victoria_style_filter_multilang_content', 5);
+
+// Alternative content function that ensures filtering
+function victoria_style_the_content_filtered() {
+    $content = get_the_content();
+    $content = apply_filters('the_content', $content);
+    $content = victoria_style_filter_multilang_content($content);
+    echo $content;
+}
+
+// Debug function to check if filtering is working
+function victoria_style_debug_multilang() {
+    if (current_user_can('manage_options') && isset($_GET['debug_multilang'])) {
+        $current_lang = victoria_style_get_current_language();
+        echo '<div style="background: #f0f0f0; padding: 10px; margin: 10px; border: 1px solid #ccc;">';
+        echo '<strong>Multilang Debug Info:</strong><br>';
+        echo 'Current language: ' . esc_html($current_lang) . '<br>';
+        echo 'Cookie value: ' . (isset($_COOKIE['site_language']) ? esc_html($_COOKIE['site_language']) : 'Not set') . '<br>';
+        echo 'Is admin: ' . (is_admin() ? 'Yes' : 'No') . '<br>';
+        echo 'Content filter active: ' . (has_filter('the_content', 'victoria_style_filter_multilang_content') ? 'Yes' : 'No') . '<br>';
+        echo '</div>';
+    }
+}
+add_action('wp_head', 'victoria_style_debug_multilang');
+
+// Also filter for AJAX requests (for dynamic content loading)
+if (wp_doing_ajax()) {
+    add_filter('the_content', 'victoria_style_filter_multilang_content', 5);
+}
+
+/**
+ * Add admin notice about multilingual content format
+ */
+function victoria_style_multilang_admin_notice() {
+    $screen = get_current_screen();
+    if ($screen && in_array($screen->id, array('post', 'page'))) {
+        ?>
+        <div class="notice notice-info">
+            <p><strong>Multilingual Content:</strong> Use the format <code>&lt;ru_&gt;Russian text&lt;/ru_&gt;&lt;ka_&gt;Georgian text&lt;/ka_&gt;&lt;eng_&gt;English text&lt;/eng_&gt;</code> for multilingual content that will change based on the language switcher.</p>
+        </div>
+        <?php
+    }
+}
+add_action('admin_notices', 'victoria_style_multilang_admin_notice');
+
+// Test shortcode for multilingual content (for debugging)
+function victoria_style_test_multilang_shortcode($atts) {
+    $current_lang = victoria_style_get_current_language();
+    $test_content = '<ru_>Это русский текст<ru_><ka_>ეს არის ქართული<ka_><eng_>This is English<eng_>';
+    $filtered_content = victoria_style_filter_multilang_content($test_content);
+    
+    return '<div class="multilang-test-box" style="border: 1px solid #ccc; padding: 10px; margin: 10px 0;" data-original-content="' . esc_attr($test_content) . '">
+        <strong>Current Language:</strong> <span class="current-lang">' . esc_html($current_lang) . '</span><br>
+        <strong>Original:</strong> ' . esc_html($test_content) . '<br>
+        <strong>Filtered:</strong> <span class="filtered-content">' . esc_html($filtered_content) . '</span>
+    </div>';
+}
+add_shortcode('test_multilang', 'victoria_style_test_multilang_shortcode'); 

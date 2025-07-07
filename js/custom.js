@@ -106,6 +106,8 @@ jQuery(document).ready(function($) {
             }
         });
 
+        // Content updates now handled by page refresh
+
         // Update language switcher active state
         $('.language-switcher .language-btn, .language-switcher .btn').removeClass('active');
         $('.language-switcher [data-lang="' + selectedLang + '"]').addClass('active');
@@ -117,51 +119,26 @@ jQuery(document).ready(function($) {
         console.log('Content update completed for language:', selectedLang);
     }
 
+    // Content translation now handled by server-side filtering with page refresh
+
     // Make updateMultilangContent globally available
     window.updateMultilangContent = updateMultilangContent;
     
-    // Language Switcher functionality - jQuery event handler
+    // Language Switcher functionality - jQuery event handler (simplified with page refresh)
     $('.language-switcher .language-btn, .language-switcher .btn').on('click', function(e) {
         e.preventDefault();
         var selectedLang = $(this).data('lang');
         
-        console.log('jQuery: Language switcher clicked:', selectedLang);
-        console.log('Found switcher buttons:', $('.language-switcher .btn').length);
-        
-        // Remove active class from all buttons
-        $('.language-switcher .language-btn, .language-switcher .btn').removeClass('active');
-        // Add active class to clicked button
-        $(this).addClass('active');
-        
-        // Update all multilang content
-        updateMultilangContent(selectedLang);
+        console.log('Language switcher clicked:', selectedLang);
         
         // Store language preference
         document.cookie = 'site_language=' + selectedLang + '; path=/; max-age=' + (365 * 24 * 60 * 60);
-        window.currentSiteLanguage = selectedLang;
         
-        console.log('Language updated to:', selectedLang);
+        // Refresh the page to apply server-side language filtering
+        window.location.reload();
     });
     
-    // Listen for custom language change events
-    document.addEventListener('languageChanged', function(e) {
-        var selectedLang = e.detail.language;
-        console.log('Custom event: Language changed to:', selectedLang);
-        updateMultilangContent(selectedLang);
-    });
-
-    // Initialize language on page load
-    // Get stored language preference
-    var storedLang = document.cookie.replace(/(?:(?:^|.*;\s*)site_language\s*\=\s*([^;]*).*$)|^.*$/, "$1");
-    if (storedLang) {
-        $('.language-switcher .btn').removeClass('active');
-        $('.language-switcher .btn[data-lang="' + storedLang + '"]').addClass('active');
-        updateMultilangContent(storedLang);
-    } else {
-        // Default to first active language
-        var activeLang = $('.language-switcher .btn.active').data('lang') || 'rus';
-        updateMultilangContent(activeLang);
-    }
+    // Language switching now uses page refresh - no need for real-time event listeners
 
     // Mega Panel functionality
     let megaPanelTimeout;

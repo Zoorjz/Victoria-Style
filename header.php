@@ -82,38 +82,15 @@
                                 const selectedLang = this.getAttribute('data-lang');
                                 console.log('Language button clicked:', selectedLang);
                                 
-                                // Update active state
-                                languageButtons.forEach(btn => btn.classList.remove('active'));
-                                this.classList.add('active');
-                                
                                 // Store language preference
                                 document.cookie = 'site_language=' + selectedLang + '; path=/; max-age=' + (365 * 24 * 60 * 60);
-                                window.currentSiteLanguage = selectedLang;
                                 
-                                // Trigger custom event for language change
-                                const languageChangeEvent = new CustomEvent('languageChanged', {
-                                    detail: { language: selectedLang }
-                                });
-                                document.dispatchEvent(languageChangeEvent);
-                                
-                                // If jQuery is available, trigger the update function
-                                if (typeof jQuery !== 'undefined' && typeof updateMultilangContent === 'function') {
-                                    updateMultilangContent(selectedLang);
-                                } else {
-                                    // Fallback: reload page with language parameter
-                                    const url = new URL(window.location);
-                                    url.searchParams.set('lang', selectedLang);
-                                    window.location.href = url.toString();
-                                }
+                                // Reload page to apply server-side language filtering
+                                window.location.reload();
                             });
                         });
                         
-                        // Initialize content with current language
-                        if (typeof jQuery !== 'undefined' && typeof updateMultilangContent === 'function') {
-                            setTimeout(function() {
-                                updateMultilangContent(window.currentSiteLanguage);
-                            }, 100);
-                        }
+                        // Language switching now uses page refresh for reliable server-side filtering
                     });
                     </script>
                 </div>

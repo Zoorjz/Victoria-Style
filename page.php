@@ -19,8 +19,8 @@
 
                 <div class="entry-content">
                     <?php
-                    // Use the_content() which properly handles oEmbeds
-                    the_content();
+                    // Use custom content function that ensures multilingual filtering
+                    victoria_style_the_content_filtered();
 
                     wp_link_pages(array(
                         'before' => '<div class="page-links">' . esc_html__('Pages:', 'victoria-style'),
