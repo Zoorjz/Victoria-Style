@@ -387,8 +387,9 @@ function victoria_style_category_settings_page() {
                                         <p><label><strong>Title Link URL:</strong><br>
                                         <input type="url" name="homepage_categories[<?php echo $index; ?>][subcategories][<?php echo $sub_index; ?>][title_link]" value="<?php echo esc_attr(isset($subcategory['title_link']) ? $subcategory['title_link'] : ''); ?>" style="width: 100%;" placeholder="https://example.com/category" /></label></p>
                                         
-                                        <p><label><strong>Items (format: "Item Name|URL" one per line):</strong><br>
-                                        <small>Example: Cotton Fabric|https://example.com/cotton<br>Linen|https://example.com/linen</small><br>
+                                        <p><label><strong>Items (format: "Multilingual Name|URL" one per line):</strong><br>
+                                        <small>Example with multilingual format: &lt;ru_&gt;Хлопковая ткань&lt;ru_&gt;&lt;ka_&gt;ბამბის ქსოვილი&lt;ka_&gt;&lt;eng_&gt;Cotton Fabric&lt;eng_&gt;|https://example.com/cotton<br>
+                                        Simple format: Linen|https://example.com/linen</small><br>
                                         <textarea name="homepage_categories[<?php echo $index; ?>][subcategories][<?php echo $sub_index; ?>][items]" style="width: 100%; height: 120px;"><?php 
                                         if (!empty($subcategory['items'])) {
                                             $formatted_items = array();
@@ -457,8 +458,8 @@ function victoria_style_category_settings_page() {
                 '<input type="text" name="homepage_categories[' + catIndex + '][subcategories][' + subIndex + '][title]" value="" style="width: 100%;" /></label></p>' +
                 '<p><label><strong>Title Link URL:</strong><br>' +
                 '<input type="url" name="homepage_categories[' + catIndex + '][subcategories][' + subIndex + '][title_link]" value="" style="width: 100%;" placeholder="https://example.com/category" /></label></p>' +
-                '<p><label><strong>Items (format: "Item Name|URL" one per line):</strong><br>' +
-                '<small>Example: Cotton Fabric|https://example.com/cotton<br>Linen|https://example.com/linen</small><br>' +
+                '<p><label><strong>Items (format: "Multilingual Name|URL" one per line):</strong><br>' +
+                '<small>Example with multilingual format: &lt;ru_&gt;Хлопковая ткань&lt;ru_&gt;&lt;ka_&gt;ბამბის ქსოვილი&lt;ka_&gt;&lt;eng_&gt;Cotton Fabric&lt;eng_&gt;|https://example.com/cotton<br>Simple format: Linen|https://example.com/linen</small><br>' +
                 '<textarea name="homepage_categories[' + catIndex + '][subcategories][' + subIndex + '][items]" style="width: 100%; height: 120px;"></textarea></label></p>' +
                 '<button type="button" class="button remove-subcategory" onclick="this.closest(\'.subcategory-item\').remove();">Remove Subcategory</button>' +
                 '</div>';

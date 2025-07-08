@@ -2,7 +2,8 @@
 
 <main id="primary" class="site-main">
     <div class="container-lg">
-        <div class="row position-relative">
+        <?php if (is_front_page() && !isset($_GET['singleproduct'])) : ?>
+        <div class="row position-relative d-none d-lg-flex">
             <!-- Sidebar with Categories -->
             <div class="col-auto">
                 <div class="category-sidebar">
@@ -113,10 +114,10 @@
                                     'title' => 'Home Sewing Machines', 
                                     'title_link' => '#',
                                     'items' => array(
-                                        array('name' => 'VERITAS', 'url' => '#'),
-                                        array('name' => 'Brother', 'url' => '#'),
-                                        array('name' => 'Janome', 'url' => '#'),
-                                        array('name' => 'JAPSEW', 'url' => '#')
+                                        array('name' => '<ru_>ВЕРИТАС<ru_><ka_>ვერიტასი<ka_><eng_>VERITAS<eng_>', 'url' => '#'),
+                                        array('name' => '<ru_>Бразер<ru_><ka_>ბრაზერი<ka_><eng_>Brother<eng_>', 'url' => '#'),
+                                        array('name' => '<ru_>Жаноме<ru_><ka_>ჯანომე<ka_><eng_>Janome<eng_>', 'url' => '#'),
+                                        array('name' => '<ru_>ДЖАПСЕВ<ru_><ka_>ჯაფსევი<ka_><eng_>JAPSEW<eng_>', 'url' => '#')
                                     )
                                 ),
                                 array(
@@ -145,10 +146,10 @@
                                     'title' => 'Natural Fabrics', 
                                     'title_link' => '#',
                                     'items' => array(
-                                        array('name' => 'Cotton', 'url' => '#'),
-                                        array('name' => 'Linen', 'url' => '#'),
-                                        array('name' => 'Wool', 'url' => '#'),
-                                        array('name' => 'Silk', 'url' => '#')
+                                        array('name' => '<ru_>Хлопок<ru_><ka_>ბამბა<ka_><eng_>Cotton<eng_>', 'url' => '#'),
+                                        array('name' => '<ru_>Лен<ru_><ka_>სელი<ka_><eng_>Linen<eng_>', 'url' => '#'),
+                                        array('name' => '<ru_>Шерсть<ru_><ka_>მატყლი<ka_><eng_>Wool<eng_>', 'url' => '#'),
+                                        array('name' => '<ru_>Шелк<ru_><ka_>აბრეშუმი<ka_><eng_>Silk<eng_>', 'url' => '#')
                                     )
                                 ),
                                 array(
@@ -185,9 +186,9 @@
                                         <?php foreach ($subcategory['items'] as $item) : ?>
                                         <li>
                                             <?php if (is_array($item)) : ?>
-                                                <a href="<?php echo esc_url($item['url']); ?>"><?php echo esc_html($item['name']); ?></a>
+                                                <a href="<?php echo esc_url($item['url']); ?>" data-original-text="<?php echo esc_attr($item['name']); ?>"><?php echo esc_html(victoria_style_display_multilang($item['name'])); ?></a>
                                             <?php else : ?>
-                                                <a href="#"><?php echo esc_html($item); ?></a>
+                                                <a href="#" data-original-text="<?php echo esc_attr($item); ?>"><?php echo esc_html(victoria_style_display_multilang($item)); ?></a>
                                             <?php endif; ?>
                                         </li>
                                         <?php endforeach; ?>
@@ -204,6 +205,7 @@
                 </div>
             </div>
         </div>
+        <?php endif; // End of front page check ?>
         <?php if ( have_posts() ) : ?>
 			<?php while ( have_posts() ) : the_post(); ?>
 				<div class="frontpage-content py-5">

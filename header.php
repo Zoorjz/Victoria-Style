@@ -13,26 +13,48 @@
     <header id="masthead" class="site-header">
         <nav class="navbar navbar-expand-lg navbar-light bg-white">
             <div class="container">
-                <?php
-                if (has_custom_logo()) {
-                    the_custom_logo();
-                    ?>
-                    <a class="navbar-brand site-title" href="<?php echo esc_url(home_url('/')); ?>">
-                        <?php bloginfo('name'); ?>
-                    </a>
+                <!-- Desktop Logo (hidden on mobile) -->
+                <div class="desktop-logo d-none d-lg-flex">
                     <?php
-                } else {
+                    if (has_custom_logo()) {
+                        the_custom_logo();
+                        ?>
+                        <a class="navbar-brand site-title" href="<?php echo esc_url(home_url('/')); ?>">
+                            <?php bloginfo('name'); ?>
+                        </a>
+                        <?php
+                    } else {
+                        ?>
+                        <a class="navbar-brand site-title" href="<?php echo esc_url(home_url('/')); ?>">
+                            <?php bloginfo('name'); ?>
+                        </a>
+                        <?php
+                    }
                     ?>
-                    <a class="navbar-brand site-title" href="<?php echo esc_url(home_url('/')); ?>">
-                        <?php bloginfo('name'); ?>
-                    </a>
-                    <?php
-                }
-                ?>
+                </div>
                 
-                <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#primary-menu" aria-controls="primary-menu" aria-expanded="false">
+                <!-- Mobile burger menu (left side on mobile) -->
+                <button class="navbar-toggler d-lg-none" type="button" id="mobile-menu-toggle" aria-controls="mobile-side-panel" aria-expanded="false">
                     <span class="navbar-toggler-icon"></span>
                 </button>
+                
+                <!-- Mobile Logo (centered, only visible on mobile) -->
+                <div class="mobile-logo d-lg-none position-absolute start-50 translate-middle-x">
+                    <?php
+                    if (has_custom_logo()) {
+                        // Get the custom logo and add custom-logo-phone class
+                        $custom_logo = get_custom_logo();
+                        $custom_logo = str_replace('custom-logo', 'custom-logo custom-logo-phone', $custom_logo);
+                        echo $custom_logo;
+                    } else {
+                        ?>
+                        <a class="navbar-brand site-title" href="<?php echo esc_url(home_url('/')); ?>">
+                            <?php bloginfo('name'); ?>
+                        </a>
+                        <?php
+                    }
+                    ?>
+                </div>
 
                 <div class="collapse navbar-collapse d-flex justify-content-between align-items-centers" id="primary-menu">
                     <?php
@@ -92,6 +114,7 @@
                         
                         // Language switching now uses page refresh for reliable server-side filtering
                     });
+                    
                     </script>
                 </div>
             </div>
@@ -131,5 +154,137 @@
             </div>
         </nav>
     </header>
+    
+    <!-- Mobile Side Panel -->
+    <div class="mobile-side-panel" id="mobile-side-panel">
+        <div class="mobile-side-panel-overlay" id="mobile-side-panel-overlay"></div>
+        <div class="mobile-side-panel-content">
+            <div class="mobile-side-panel-header">
+                <h5><?php echo esc_html(victoria_style_display_multilang('<ru_>Категории<ru_><ka_>კატეგორიები<ka_><eng_>Categories<eng_>')); ?></h5>
+                <button class="mobile-side-panel-close" id="mobile-side-panel-close">&times;</button>
+            </div>
+            <div class="mobile-side-panel-body">
+                <?php
+                // Get categories for mobile panel
+                $homepage_categories = get_option('homepage_categories', array());
+                
+                // Default categories if none exist
+                if (empty($homepage_categories)) {
+                    $homepage_categories = array(
+                        array('name' => '<ru_>Швейные машины<ru_><ka_>საკერავი მანქანები<ka_><eng_>Sewing Machines<eng_>', 'icon' => 'fas fa-sewing-machine', 'slug' => 'sewing-machines', 'link' => '#?categories=13'),
+                        array('name' => '<ru_>Ткани<ru_><ka_>ქსოვილები<ka_><eng_>Fabrics<eng_>', 'icon' => 'fas fa-tshirt', 'slug' => 'fabrics', 'link' => '#'),
+                        array('name' => '<ru_>Аксессуары<ru_><ka_>აქსესუარები<ka_><eng_>Accessories<eng_>', 'icon' => 'fas fa-tools', 'slug' => 'accessories', 'link' => '#'),
+                        array('name' => '<ru_>Выкройки<ru_><ka_>ნიმუშები<ka_><eng_>Patterns<eng_>', 'icon' => 'fas fa-cut', 'slug' => 'patterns', 'link' => '#')
+                    );
+                }
+                
+                foreach ($homepage_categories as $index => $category) :
+                    $subcategories = !empty($category['subcategories']) ? $category['subcategories'] : array();
+                    $has_subcategories = !empty($subcategories);
+                ?>
+                <div class="mobile-category-item">
+                    <div class="mobile-category-header" data-category="<?php echo esc_attr($category['slug']); ?>">
+                        <a href="<?php echo esc_url(!empty($category['link']) ? $category['link'] : '#'); ?>" class="mobile-category-link">
+                            <i class="<?php echo esc_attr($category['icon']); ?> me-2"></i>
+                            <?php echo esc_html(victoria_style_display_multilang($category['name'])); ?>
+                        </a>
+                        <?php if ($has_subcategories) : ?>
+                        <button class="mobile-category-toggle" type="button">
+                            <span class="arrow-down"></span>
+                        </button>
+                        <?php endif; ?>
+                    </div>
+                    
+                    <?php if ($has_subcategories) : ?>
+                    <div class="mobile-subcategory-content">
+                        <?php foreach ($subcategories as $subcategory) : ?>
+                        <div class="mobile-subcategory-section">
+                            <?php if (!empty($subcategory['title_link']) && $subcategory['title_link'] !== '#') : ?>
+                                <h6><a href="<?php echo esc_url($subcategory['title_link']); ?>"><?php echo esc_html(victoria_style_display_multilang($subcategory['title'])); ?></a></h6>
+                            <?php else : ?>
+                                <h6><?php echo esc_html(victoria_style_display_multilang($subcategory['title'])); ?></h6>
+                            <?php endif; ?>
+                            
+                            <?php if (!empty($subcategory['items'])) : ?>
+                            <ul class="mobile-subcategory-items">
+                                <?php foreach ($subcategory['items'] as $item) : ?>
+                                <li>
+                                    <?php if (is_array($item)) : ?>
+                                        <a href="<?php echo esc_url($item['url']); ?>"><?php echo esc_html(victoria_style_display_multilang($item['name'])); ?></a>
+                                    <?php else : ?>
+                                        <a href="#"><?php echo esc_html(victoria_style_display_multilang($item)); ?></a>
+                                    <?php endif; ?>
+                                </li>
+                                <?php endforeach; ?>
+                            </ul>
+                            <?php endif; ?>
+                        </div>
+                        <?php endforeach; ?>
+                    </div>
+                    <?php endif; ?>
+                </div>
+                <?php endforeach; ?>
+            </div>
+        </div>
+    </div>
+    
+    <script>
+    // Mobile Side Panel Functionality
+    document.addEventListener('DOMContentLoaded', function() {
+        const mobileMenuToggle = document.getElementById('mobile-menu-toggle');
+        const mobileSidePanel = document.getElementById('mobile-side-panel');
+        const mobileSidePanelOverlay = document.getElementById('mobile-side-panel-overlay');
+        const mobileSidePanelClose = document.getElementById('mobile-side-panel-close');
+        
+        // Open mobile panel
+        if (mobileMenuToggle) {
+            mobileMenuToggle.addEventListener('click', function(e) {
+                e.preventDefault();
+                console.log('Mobile menu toggle clicked');
+                if (mobileSidePanel) {
+                    mobileSidePanel.classList.add('active');
+                    document.body.classList.add('mobile-panel-open');
+                }
+            });
+        }
+        
+        // Close mobile panel
+        function closeMobilePanel() {
+            if (mobileSidePanel) {
+                mobileSidePanel.classList.remove('active');
+                document.body.classList.remove('mobile-panel-open');
+            }
+        }
+        
+        if (mobileSidePanelClose) {
+            mobileSidePanelClose.addEventListener('click', closeMobilePanel);
+        }
+        
+        if (mobileSidePanelOverlay) {
+            mobileSidePanelOverlay.addEventListener('click', closeMobilePanel);
+        }
+        
+        // Toggle subcategories in mobile panel
+        const mobileCategoryToggles = document.querySelectorAll('.mobile-category-toggle');
+        mobileCategoryToggles.forEach(function(toggle) {
+            toggle.addEventListener('click', function(e) {
+                e.preventDefault();
+                const categoryItem = this.closest('.mobile-category-item');
+                const subcategoryContent = categoryItem.querySelector('.mobile-subcategory-content');
+                const arrow = this.querySelector('span');
+                
+                if (subcategoryContent.style.display === 'block') {
+                    subcategoryContent.style.display = 'none';
+                    arrow.classList.remove('arrow-up');
+                    arrow.classList.add('arrow-down');
+                } else {
+                    subcategoryContent.style.display = 'block';
+                    arrow.classList.remove('arrow-down');
+                    arrow.classList.add('arrow-up');
+                }
+            });
+        });
+    });
+    </script>
 
     
