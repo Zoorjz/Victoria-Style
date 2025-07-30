@@ -70,7 +70,7 @@
                     ));
                     ?>
                     <!-- Language Switcher -->
-                    <div class="language-switcher ms-auto me-3" id="language-switcher">
+                    <div class="language-switcher ms-auto" id="language-switcher">
                         <div class="btn-group" role="group" aria-label="Language switcher">
                             <?php 
                             $current_lang = victoria_style_get_current_language();
@@ -160,10 +160,44 @@
         <div class="mobile-side-panel-overlay" id="mobile-side-panel-overlay"></div>
         <div class="mobile-side-panel-content">
             <div class="mobile-side-panel-header">
-                <h5><?php echo esc_html(victoria_style_display_multilang('<ru_>Категории<ru_><ka_>კატეგორიები<ka_><eng_>Categories<eng_>')); ?></h5>
+                <h5><?php echo esc_html(victoria_style_display_multilang('<ru_>Меню<ru_><ka_>მენიუ<ka_><eng_>Menu<eng_>')); ?></h5>
                 <button class="mobile-side-panel-close" id="mobile-side-panel-close">&times;</button>
             </div>
             <div class="mobile-side-panel-body">
+                <!-- Navigation Section -->
+                <div class="mobile-navigation-section">
+                    <h6 class="mobile-section-title"><?php echo esc_html(victoria_style_display_multilang('<ru_>Навигация<ru_><ka_>ნავიგაცია<ka_><eng_>Navigation<eng_>')); ?></h6>
+                    <ul class="mobile-navigation-list">
+                        <?php
+                        // Get custom secondary navigation items
+                        $custom_secondary_nav_items = get_option('custom_secondary_navigation_items', array());
+                        
+                        // Default secondary navigation items if none exist
+                        if (empty($custom_secondary_nav_items)) {
+                            $custom_secondary_nav_items = array(
+                                array('title' => '<ru_>О нас<ru_><ka_>ჩვენს შესახებ<ka_><eng_>About<eng_>', 'url' => '#', 'target' => '_self'),
+                                array('title' => '<ru_>Ателье<ru_><ka_>სახელოსნო<ka_><eng_>Atelier<eng_>', 'url' => '#', 'target' => '_self'),
+                                array('title' => '<ru_>Ткани<ru_><ka_>ქსოვილები<ka_><eng_>Cloth<eng_>', 'url' => '#', 'target' => '_self'),
+                                array('title' => '<ru_>Швейные машины<ru_><ka_>საკერავი მანქანები<ka_><eng_>Sewing Machines<eng_>', 'url' => '#', 'target' => '_self'),
+                                array('title' => '<ru_>Блог<ru_><ka_>ბლოგი<ka_><eng_>Blog<eng_>', 'url' => '#', 'target' => '_self'),
+                                array('title' => '<ru_>Контакты<ru_><ka_>კონტაქტი<ka_><eng_>Contacts<eng_>', 'url' => '#', 'target' => '_self')
+                            );
+                        }
+                        
+                        if (!empty($custom_secondary_nav_items)) {
+                            foreach ($custom_secondary_nav_items as $item) {
+                                echo '<li>';
+                                echo '<a href="' . esc_url($item['url']) . '" target="' . esc_attr($item['target']) . '" data-original-text="' . esc_attr($item['title']) . '">' . esc_html(victoria_style_display_multilang($item['title'])) . '</a>';
+                                echo '</li>';
+                            }
+                        }
+                        ?>
+                    </ul>
+                </div>
+                
+                <!-- Categories Section -->
+                <div class="mobile-categories-section">
+                    <h6 class="mobile-section-title"><?php echo esc_html(victoria_style_display_multilang('<ru_>Категории<ru_><ka_>კატეგორიები<ka_><eng_>Categories<eng_>')); ?></h6>
                 <?php
                 // Get categories for mobile panel
                 $homepage_categories = get_option('homepage_categories', array());
@@ -224,6 +258,7 @@
                     <?php endif; ?>
                 </div>
                 <?php endforeach; ?>
+                </div> <!-- End mobile-categories-section -->
             </div>
         </div>
     </div>

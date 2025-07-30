@@ -295,7 +295,6 @@ function victoria_style_category_settings_page() {
         $categories = array(
             array(
                 'name' => 'Sewing Machines',
-                'icon' => 'fas fa-sewing-machine',
                 'slug' => 'sewing-machines',
                 'subcategories' => array(
                     array(
@@ -314,7 +313,6 @@ function victoria_style_category_settings_page() {
             ),
             array(
                 'name' => 'Fabrics',
-                'icon' => 'fas fa-tshirt',
                 'slug' => 'fabrics',
                 'subcategories' => array(
                     array(
@@ -329,13 +327,11 @@ function victoria_style_category_settings_page() {
             ),
             array(
                 'name' => 'Accessories',
-                'icon' => 'fas fa-tools',
                 'slug' => 'accessories',
                 'subcategories' => array()
             ),
             array(
                 'name' => 'Patterns',
-                'icon' => 'fas fa-cut',
                 'slug' => 'patterns',
                 'subcategories' => array()
             )
@@ -361,12 +357,11 @@ function victoria_style_category_settings_page() {
                                 <td><?php victoria_style_multilang_input_field('homepage_categories[' . $index . '][name]', $category['name'], '<ru_>Швейные машины<ru_><ka_>საკერავი მანქანები<ka_><eng_>Sewing Machines<eng_>'); ?></td>
                             </tr>
                             <tr>
-                                <th><label>Icon Class:</label></th>
-                                <td><input type="text" name="homepage_categories[<?php echo $index; ?>][icon]" value="<?php echo esc_attr($category['icon']); ?>" style="width: 300px;" placeholder="fas fa-icon-name" /></td>
-                            </tr>
-                            <tr>
                                 <th><label>URL Slug:</label></th>
-                                <td><input type="text" name="homepage_categories[<?php echo $index; ?>][slug]" value="<?php echo esc_attr($category['slug']); ?>" style="width: 300px;" placeholder="category-slug" /></td>
+                                <td>
+                                    <input type="text" name="homepage_categories[<?php echo $index; ?>][slug]" value="<?php echo esc_attr($category['slug']); ?>" style="width: 300px;" placeholder="category-slug" />
+                                    <br><small style="color: #666;">Важно для поисковиков (Google, Yandex). Напишите на английском наименование категории которую сверху указали. Не должно повторяться с другими категориями.</small>
+                                </td>
                             </tr>
                             <tr>
                                 <th><label>Category Link URL:</label></th>
@@ -432,8 +427,7 @@ function victoria_style_category_settings_page() {
                 '<h3>Category ' + (categoryIndex + 1) + '</h3>' +
                 '<table class="form-table">' +
                 '<tr><th><label>Category Name:</label></th><td><input type="text" name="homepage_categories[' + categoryIndex + '][name]" value="" style="width: 300px;" /></td></tr>' +
-                '<tr><th><label>Icon Class:</label></th><td><input type="text" name="homepage_categories[' + categoryIndex + '][icon]" value="" style="width: 300px;" placeholder="fas fa-icon-name" /></td></tr>' +
-                '<tr><th><label>URL Slug:</label></th><td><input type="text" name="homepage_categories[' + categoryIndex + '][slug]" value="" style="width: 300px;" placeholder="category-slug" /></td></tr>' +
+                '<tr><th><label>URL Slug:</label></th><td><input type="text" name="homepage_categories[' + categoryIndex + '][slug]" value="" style="width: 300px;" placeholder="category-slug" /><br><small style="color: #666;">Важно для поисковиков (Google, Yandex). Напишите на английском наименование категории которую сверху указали. Не должно повторяться с другими категориями.</small></td></tr>' +
                 '<tr><th><label>Category Link URL:</label></th><td><input type="url" name="homepage_categories[' + categoryIndex + '][link]" value="" style="width: 300px;" placeholder="https://example.com/category" /></td></tr>' +
                 '</table>' +
                 '<h4>Subcategories</h4>' +
@@ -493,7 +487,6 @@ function victoria_style_process_categories($input) {
             if (!empty($category['name'])) {
                 $processed_category = array(
                     'name' => victoria_style_sanitize_multilang_text($category['name']),
-                    'icon' => sanitize_text_field($category['icon']),
                     'slug' => sanitize_title($category['slug']),
                     'link' => esc_url_raw($category['link']),
                     'subcategories' => array()
@@ -1118,4 +1111,21 @@ function victoria_style_test_multilang_shortcode($atts) {
         <strong>Filtered:</strong> <span class="filtered-content">' . esc_html($filtered_content) . '</span>
     </div>';
 }
-add_shortcode('test_multilang', 'victoria_style_test_multilang_shortcode'); 
+add_shortcode('test_multilang', 'victoria_style_test_multilang_shortcode');
+
+/**
+ * Hide product tags for non-admin users
+ */
+function victoria_style_hide_tags_for_non_admins() {
+    // Only add CSS if user is not an administrator
+    if (!current_user_can('manage_options')) {
+        ?>
+        <style>
+            .ewd-upcp-catalog-sidebar-tags {
+                display: none !important;
+            }
+        </style>
+        <?php
+    }
+}
+add_action('wp_head', 'victoria_style_hide_tags_for_non_admins'); 

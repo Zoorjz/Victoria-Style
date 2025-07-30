@@ -2,6 +2,21 @@
 
 <main id="primary" class="site-main">
     <div class="container-lg">
+        <?php if (is_front_page() && isset($_GET['singleproduct'])) : ?>
+        <!-- Back to Home Link for Single Product View -->
+        <div class="row mt-4 mb-3">
+            <div class="col-12">
+                <div class="back-to-home-wrapper">
+                    <a href="<?php echo esc_url(home_url('/')); ?>" class="back-to-home-link">
+                        <i class="dashicons dashicons-arrow-left-alt"></i>
+                        <span data-original-text="<ru_>Вернуться на главную<ru_><ka_>მთავარზე დაბრუნება<ka_><eng_>Back to Home<eng_>">
+                            <?php echo victoria_style_display_multilang('<ru_>Вернуться на главную<ru_><ka_>მთავარზე დაბრუნება<ka_><eng_>Back to Home<eng_>'); ?>
+                        </span>
+                    </a>
+                </div>
+            </div>
+        </div>
+        <?php endif; ?>
         <?php if (is_front_page() && !isset($_GET['singleproduct'])) : ?>
         <div class="row position-relative d-none d-lg-flex">
             <!-- Sidebar with Categories -->
@@ -14,17 +29,17 @@
                         // Default categories if none exist
                         if (empty($homepage_categories)) {
                             $homepage_categories = array(
-                                array('name' => '<ru_>Швейные машины<ru_><ka_>საკერავი მანქანები<ka_><eng_>Sewing Machines<eng_>', 'icon' => 'fas fa-sewing-machine', 'slug' => 'sewing-machines', 'link' => '#?categories=13'),
-                                array('name' => '<ru_>Ткани<ru_><ka_>ქსოვილები<ka_><eng_>Fabrics<eng_>', 'icon' => 'fas fa-tshirt', 'slug' => 'fabrics', 'link' => '#'),
-                                array('name' => '<ru_>Аксессуары<ru_><ka_>აქსესუარები<ka_><eng_>Accessories<eng_>', 'icon' => 'fas fa-tools', 'slug' => 'accessories', 'link' => '#'),
-                                array('name' => '<ru_>Выкройки<ru_><ka_>ნიმუშები<ka_><eng_>Patterns<eng_>', 'icon' => 'fas fa-cut', 'slug' => 'patterns', 'link' => '#')
+                                array('name' => '<ru_>Швейные машины<ru_><ka_>საკერავი მანქანები<ka_><eng_>Sewing Machines<eng_>', 'slug' => 'sewing-machines', 'link' => '#?categories=13'),
+                                array('name' => '<ru_>Ткани<ru_><ka_>ქსოვილები<ka_><eng_>Fabrics<eng_>', 'slug' => 'fabrics', 'link' => '#'),
+                                array('name' => '<ru_>Аксессуары<ru_><ka_>აქსესუარები<ka_><eng_>Accessories<eng_>', 'slug' => 'accessories', 'link' => '#'),
+                                array('name' => '<ru_>Выкройки<ru_><ka_>ნიმუშები<ka_><eng_>Patterns<eng_>', 'slug' => 'patterns', 'link' => '#')
                             );
                         }
                         
                         foreach ($homepage_categories as $category) :
                         ?>
                         <a href="<?php echo esc_url(!empty($category['link']) ? $category['link'] : '#'); ?>" class="list-group-item list-group-item-action category-item" data-category="<?php echo esc_attr($category['slug']); ?>" data-original-text="<?php echo esc_attr($category['name']); ?>">
-                            <i class="<?php echo esc_attr($category['icon']); ?> me-2"></i><?php echo esc_html(victoria_style_display_multilang($category['name'])); ?>
+                            <?php echo esc_html(victoria_style_display_multilang($category['name'])); ?>
                         </a>
                         <?php endforeach; ?>
                     </div>
@@ -208,7 +223,7 @@
         <?php endif; // End of front page check ?>
         <?php if ( have_posts() ) : ?>
 			<?php while ( have_posts() ) : the_post(); ?>
-				<div class="frontpage-content py-5">
+				<div class="frontpage-content py-5" id="product-section">
 					<?php the_content(); ?>
 				</div>
 			<?php endwhile; ?>

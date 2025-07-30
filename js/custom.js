@@ -152,6 +152,33 @@ jQuery(document).ready(function($) {
             clearTimeout(megaPanelTimeout);
             
             if (hasSubcategories) {
+                // Calculate position of the hovered category item
+                const $this = $(this);
+                const itemOffset = $this.offset();
+                const megaPanel = $('.mega-panel');
+                
+                // Get the parent container's offset to calculate relative position
+                const containerOffset = $('.row.position-relative').offset();
+                const relativeTop = itemOffset.top - containerOffset.top;
+                
+                // Set the mega panel position to align with the hovered category
+                // Adjust to center the panel vertically with the category item
+                megaPanel.css({
+                    'top': relativeTop + 'px'
+                });
+                
+                // Check if panel would go below viewport and adjust if needed
+                const panelHeight = megaPanel.outerHeight();
+                const windowHeight = $(window).height();
+                const containerTop = containerOffset.top;
+                const panelBottom = containerTop + relativeTop + panelHeight;
+                
+                if (panelBottom > windowHeight + $(window).scrollTop()) {
+                    // Adjust position to keep panel in viewport
+                    const maxTop = windowHeight + $(window).scrollTop() - containerTop - panelHeight - 20; // 20px buffer
+                    megaPanel.css('top', Math.max(0, maxTop) + 'px');
+                }
+                
                 // Show mega panel
                 $('.mega-panel').addClass('active');
                 // Show corresponding section
@@ -185,4 +212,24 @@ jQuery(document).ready(function($) {
             }, 200);
         }
     );
+
+    // Auto-add #product-section to category and mega panel links
+    $('.category-item, .mega-panel a').on('click', function(e) {
+        var href = $(this).attr('href');
+        
+        if (href && href !== '#') {
+            // Check if link has query parameters
+            if (href.indexOf('?') !== -1) {
+                // Check if it has no hash or just ends with #
+                if (href.indexOf('#') === -1) {
+                    e.preventDefault();
+                    window.location.href = href + '#product-section';
+                } else if (href.endsWith('#')) {
+                    e.preventDefault();
+                    // Replace the trailing # with #product-section
+                    window.location.href = href.slice(0, -1) + '#product-section';
+                }
+            }
+        }
+    });
 }); 
