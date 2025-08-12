@@ -2,21 +2,6 @@
 
 <main id="primary" class="site-main">
     <div class="container-lg">
-        <?php if (is_front_page() && isset($_GET['singleproduct'])) : ?>
-        <!-- Back to Home Link for Single Product View -->
-        <div class="row mt-4 mb-3">
-            <div class="col-12">
-                <div class="back-to-home-wrapper">
-                    <a href="<?php echo esc_url(home_url('/')); ?>" class="back-to-home-link">
-                        <i class="dashicons dashicons-arrow-left-alt"></i>
-                        <span data-original-text="<ru_>Вернуться на главную<ru_><ka_>მთავარზე დაბრუნება<ka_><eng_>Back to Home<eng_>">
-                            <?php echo victoria_style_display_multilang('<ru_>Вернуться на главную<ru_><ka_>მთავარზე დაბრუნება<ka_><eng_>Back to Home<eng_>'); ?>
-                        </span>
-                    </a>
-                </div>
-            </div>
-        </div>
-        <?php endif; ?>
         <?php if (is_front_page() && !isset($_GET['singleproduct'])) : ?>
         <div class="row position-relative d-none d-lg-flex">
             <!-- Sidebar with Categories -->

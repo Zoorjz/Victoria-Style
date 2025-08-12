@@ -38,6 +38,7 @@ body {
 .site-header {
     background-color: var(--primary-color);
     box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+    position: relative;
 }
 
 .navbar {
@@ -831,5 +832,94 @@ body.mobile-panel-open {
     .back-to-home-link {
         font-size: 0.9rem;
         padding: 8px 16px;
+    }
+}
+
+/* Floating Back to Home Button */
+.floating-back-home {
+    position: absolute;
+    top: 100%;
+    left: 0;
+    right: 0;
+    z-index: 1040;
+    margin-top: 10px;
+}
+
+.floating-back-home .container {
+    position: relative;
+}
+
+.floating-back-home-link {
+    display: inline-flex;
+    align-items: center;
+    gap: 12px;
+    color: var(--accent-color);
+    text-decoration: none;
+    font-weight: 600;
+    font-size: 1.3rem;
+    padding: 18px 35px;
+    border: 3px solid var(--accent-color);
+    border-radius: 35px;
+    transition: all 0.3s ease;
+    background-color: rgba(255, 255, 255, 0.98);
+    box-shadow: 0 3px 15px rgba(0, 0, 0, 0.1);
+    margin-left: 0; /* Align with logo */
+}
+
+.floating-back-home-link:hover {
+    background-color: var(--accent-color);
+    color: #ffffff;
+    transform: translateY(-3px);
+    box-shadow: 0 6px 25px rgba(184, 134, 26, 0.4);
+}
+
+.floating-back-home-link .arrow-icon {
+    font-size: 1.8rem;
+    line-height: 1;
+    font-weight: normal;
+    transition: transform 0.3s ease;
+}
+
+.floating-back-home-link:hover .arrow-icon {
+    transform: translateX(-3px);
+}
+
+.floating-back-home-text {
+    font-size: 1.2rem;
+    line-height: 1;
+}
+
+/* Mobile responsive */
+@media (max-width: 991px) {
+    .floating-back-home {
+        margin-top: 5px;
+    }
+    
+    .floating-back-home-link {
+        font-size: 1.1rem;
+        padding: 14px 28px;
+    }
+    
+    .floating-back-home-link .arrow-icon {
+        font-size: 1.5rem;
+    }
+    
+    .floating-back-home-text {
+        font-size: 1rem;
+    }
+}
+
+@media (max-width: 576px) {
+    .floating-back-home-link {
+        padding: 12px 24px;
+        font-size: 1rem;
+    }
+    
+    .floating-back-home-link .arrow-icon {
+        font-size: 1.3rem;
+    }
+    
+    .floating-back-home-text {
+        font-size: 0.9rem;
     }
 } 

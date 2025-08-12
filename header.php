@@ -153,6 +153,20 @@
                 </div>
             </div>
         </nav>
+        
+        <!-- Floating Back to Home Button -->
+        <?php if (!is_front_page() || isset($_GET['singleproduct'])) : ?>
+        <div class="floating-back-home">
+            <div class="container">
+                <a href="<?php echo esc_url(home_url('/')); ?>" class="floating-back-home-link" title="<?php echo esc_attr(victoria_style_display_multilang('<ru_>Вернуться на главную<ru_><ka_>მთავარზე დაბრუნება<ka_><eng_>Back to Home<eng_>')); ?>">
+                    <span class="arrow-icon">←</span>
+                    <span class="floating-back-home-text" data-original-text="<ru_>На главную<ru_><ka_>მთავარზე<ka_><eng_>Home<eng_>">
+                        <?php echo victoria_style_display_multilang('<ru_>На главную<ru_><ka_>მთავარზე<ka_><eng_>Home<eng_>'); ?>
+                    </span>
+                </a>
+            </div>
+        </div>
+        <?php endif; ?>
     </header>
     
     <!-- Mobile Side Panel -->
