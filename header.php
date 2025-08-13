@@ -233,7 +233,9 @@
                 <div class="mobile-category-item">
                     <div class="mobile-category-header" data-category="<?php echo esc_attr($category['slug']); ?>">
                         <a href="<?php echo esc_url(!empty($category['link']) ? $category['link'] : '#'); ?>" class="mobile-category-link">
-                            <i class="<?php echo esc_attr($category['icon']); ?> me-2"></i>
+                            <?php if (!empty($category['icon'])) : ?>
+                                <i class="<?php echo esc_attr($category['icon']); ?> me-2"></i>
+                            <?php endif; ?>
                             <?php echo esc_html(victoria_style_display_multilang($category['name'])); ?>
                         </a>
                         <?php if ($has_subcategories) : ?>

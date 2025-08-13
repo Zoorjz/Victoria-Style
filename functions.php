@@ -61,6 +61,12 @@ require get_template_directory() . '/inc/template-tags.php';
 // Custom functions
 require get_template_directory() . '/inc/custom-functions.php';
 
+// Footer settings
+require get_template_directory() . '/inc/footer-settings.php';
+
+// Security configuration
+require get_template_directory() . '/inc/security-config.php';
+
 // Database connection function
 function victoria_style_db_connect() {
     global $wpdb;
