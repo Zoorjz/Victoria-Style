@@ -37,6 +37,11 @@
                 // Get carousel slides from settings
                 $carousel_slides = get_option('carousel_slides', array());
                 
+                // Ensure carousel_slides is an array
+                if (!is_array($carousel_slides)) {
+                    $carousel_slides = array();
+                }
+                
                 // Filter out empty slides
                 $carousel_slides = array_filter($carousel_slides, function($slide) {
                     return !empty($slide['image']) && !empty($slide['title']);
